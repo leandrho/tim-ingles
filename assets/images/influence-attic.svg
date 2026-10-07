@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="wall" x2="1" y2=".6"><stop stop-color="#0b1724"/><stop offset=".6" stop-color="#243943"/><stop offset="1" stop-color="#122532"/></linearGradient>
+    <linearGradient id="screen" x2=".6" y2="1"><stop stop-color="#c5ccc0"/><stop offset=".65" stop-color="#8c9f9e"/><stop offset="1" stop-color="#526e7b"/></linearGradient>
+    <linearGradient id="floor" x2="0" y2="1"><stop stop-color="#414947"/><stop offset="1" stop-color="#081623"/></linearGradient>
+    <linearGradient id="wood" x2=".3" y2="1"><stop stop-color="#685d4d"/><stop offset="1" stop-color="#283944"/></linearGradient>
+    <linearGradient id="steel"><stop stop-color="#213743"/><stop offset=".45" stop-color="#859295"/><stop offset=".7" stop-color="#526b75"/><stop offset="1" stop-color="#19323f"/></linearGradient>
+    <linearGradient id="paper" x2=".5" y2="1"><stop stop-color="#d0cbb4"/><stop offset=".65" stop-color="#acb29e"/><stop offset="1" stop-color="#7d9496"/></linearGradient>
+    <radialGradient id="wash"><stop stop-color="#b3cbca" stop-opacity=".13"/><stop offset="1" stop-color="#b3cbca" stop-opacity="0"/></radialGradient>
+    <clipPath id="projection"><path d="M903 217L1414 189 1374 582 866 619Z"/></clipPath>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" seed="67"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".04"/></feComponentTransfer></filter>
+  </defs>
+  <path d="M0 0H1600V900H0Z" fill="url(#wall)"/>
+  <ellipse cx="1179" cy="396" rx="560" ry="458" fill="url(#wash)"/>
+  <path d="M0 0H603L926 170 1600 34V0Z" fill="#081321"/>
+  <path d="M0 16L925 195 1600 55L1600 73 923 214 0 36Z" fill="#182b37"/>
+  <path d="M636 0L931 173 1600 39M0 25L924 203 1600 64" stroke="#64727a" stroke-opacity=".3" stroke-width="3" fill="none"/>
+  <path d="M1115 149L1227 746M1499 76L1433 686" stroke="#0b1b28" stroke-width="22"/>
+  <path d="M1127 154L1239 742M1508 82L1444 684" stroke="#788388" stroke-opacity=".12" stroke-width="2"/>
+  <path d="M0 741L1600 682V900H0Z" fill="url(#floor)"/>
+  <g stroke="#9a9b8e" stroke-opacity=".13" fill="none"><path d="M0 744L1600 685M0 791L1600 741M0 871L1600 820"/><path d="M814 713L714 900M1160 699L1266 900M1454 688L1671 900"/></g>
+  <!-- One expressionist projection; the only character shadow is the animated layer. -->
+  <path d="M891 151L905 191M1421 130L1413 169" stroke="#8a9698" stroke-width="2" opacity=".45"/>
+  <path d="M874 191L1442 159" stroke="#081722" stroke-width="13" stroke-linecap="round"/>
+  <path d="M879 196L1436 165 1396 605 843 643Z" fill="#102330"/>
+  <path d="M903 217L1414 189 1374 582 866 619Z" fill="url(#screen)"/>
+  <g clip-path="url(#projection)">
+    <path d="M896 213L1029 362 947 630 854 637ZM1084 198L1122 354 1057 612 1026 614 1074 348 1015 212ZM1405 183L1290 339 1385 590 1307 602 1208 347 1320 191Z" fill="#263e4a" opacity=".75"/>
+    <path d="M918 601L982 381 997 279 1036 266 1070 603ZM1226 596L1268 312 1316 273 1351 588Z" fill="#4c6570"/>
+    <path d="M969 283L1007 233 1050 268ZM1253 316L1300 220 1332 278Z" fill="#213947"/>
+    <path d="M1007 242L1012 274M1300 233L1309 286" stroke="#abb7b4" stroke-opacity=".3" stroke-width="2"/>
+    <path d="M992 384L1020 368 1028 416 985 431ZM1277 365L1301 346 1311 391 1271 416Z" fill="#c6d0bf" opacity=".7"/>
+    <path d="M1009 375L1006 423M991 404L1023 391M1290 355L1294 402M1277 385L1306 369" stroke="#2f4755" stroke-width="3"/>
+    <path d="M1050 607L1110 504 1178 499 1234 594Z" fill="#a8b9b4" opacity=".45"/>
+    <path d="M1101 554L1189 546M1089 573L1202 564M1075 597L1220 587" stroke="#283f4d" stroke-opacity=".3" stroke-width="3"/>
+    <path d="M936 551L965 539M949 502L980 492M1320 457L1336 450M1311 481L1339 470" stroke="#aebcb4" stroke-opacity=".17" stroke-width="1.5"/>
+    <path d="M1045 228L1051 317M1351 253L1357 338M922 414L913 472" stroke="#d0d7ca" stroke-opacity=".12"/>
+  </g>
+  <path d="M903 217L1414 189 1374 582 866 619Z" fill="none" stroke="#c1cdca" stroke-opacity=".28" stroke-width="1.5"/>
+  <path d="M846 643L1399 605" stroke="#546e79" stroke-width="9" stroke-linecap="round"/>
+  <path d="M847 640L1398 602" stroke="#a9b5b2" stroke-opacity=".4" stroke-width="2"/>
+  <!-- Tangible story materials: a worn open book, stacked volumes and a miniature set. -->
+  <ellipse cx="1114" cy="841" rx="300" ry="43" fill="#07121e" opacity=".4"/>
+  <path d="M801 737L1295 704 1407 795 906 845Z" fill="url(#wood)"/>
+  <path d="M801 737L906 845 1407 795V813L908 865 802 757Z" fill="#1f303b"/>
+  <path d="M810 738L909 839 1396 793" stroke="#b1a385" stroke-opacity=".35" stroke-width="2" fill="none"/>
+  <path d="M826 779L850 900M1349 824L1367 900" stroke="#0b1b28" stroke-width="21"/>
+  <path d="M849 770L1198 749M914 819L1321 779" stroke="#a5a18a" stroke-opacity=".12" fill="none"/>
+  <path d="M886 750Q952 720 1033 744Q1113 704 1190 730L1224 793Q1121 777 1057 813Q975 790 918 807Z" fill="#1c3340"/>
+  <path d="M892 746Q958 716 1034 740Q1113 699 1185 725L1218 785Q1118 769 1055 805Q979 784 922 799Z" fill="#849492"/>
+  <path d="M890 738Q958 707 1034 735Q1110 694 1182 717L1207 774Q1112 758 1050 796Q979 771 920 790Z" fill="url(#paper)"/>
+  <path d="M1034 735Q1035 770 1050 796" stroke="#506971" stroke-width="3" fill="none"/>
+  <g stroke="#536f73" stroke-opacity=".3" stroke-width="1.5" fill="none"><path d="M924 741Q971 723 1015 741M932 752Q977 734 1018 751M940 765Q981 749 1021 764M1080 729Q1119 711 1164 722M1085 741Q1125 723 1170 734M1090 753Q1133 737 1175 746"/></g>
+  <path d="M1045 794L1067 824 1079 801" fill="#8f6268"/>
+  <path d="M1212 770L1336 758 1348 776 1222 790Z" fill="#182e3d"/>
+  <path d="M1219 761L1329 748 1342 766 1227 780Z" fill="#7c8d85"/>
+  <path d="M1242 744L1249 663 1268 661 1277 741 1293 737 1295 703 1312 700 1327 746Z" fill="#213b49"/>
+  <path d="M1242 664L1259 620 1277 662ZM1287 705L1301 674 1320 701Z" fill="#3e5660"/>
+  <path d="M1259 629V659M1301 681L1306 701M1266 670L1273 735" stroke="#a7b7b4" stroke-opacity=".35" fill="none"/>
+  <path d="M1254 696H1261V714H1254ZM1300 721H1307V734H1300Z" fill="#b0b7a1" opacity=".5"/>
+  <!-- Metal reels, sprocket holes, a focused lens and a heavy projector body. -->
+  <g fill="#263c48" stroke="#819297" stroke-opacity=".45" stroke-width="2"><ellipse cx="668" cy="852" rx="80" ry="22"/><ellipse cx="668" cy="839" rx="80" ry="22"/><ellipse cx="668" cy="827" rx="80" ry="22"/></g>
+  <ellipse cx="668" cy="827" rx="63" ry="15" fill="#1e3341" stroke="#8b9c9e" stroke-opacity=".25"/>
+  <path d="M634 826L698 823" stroke="#728b93" stroke-opacity=".3" stroke-width="2"/>
+  <ellipse cx="1497" cy="888" rx="125" ry="30" fill="#071623" opacity=".6"/>
+  <path d="M1393 799L1511 770 1570 857 1447 891Z" fill="url(#steel)" stroke="#142c39" stroke-width="3"/>
+  <path d="M1410 807L1498 786 1542 849 1454 873Z" fill="#203c4b"/>
+  <path d="M1429 813L1503 795M1435 824L1510 806M1442 835L1518 817" stroke="#0f2634" stroke-width="4"/>
+  <path d="M1447 891L1570 857 1576 872 1452 905Z" fill="#102b3a"/>
+  <path d="M1404 800L1371 815 1385 845 1426 832Z" fill="url(#steel)"/>
+  <ellipse cx="1379" cy="829" rx="9" ry="15" transform="rotate(-24 1379 829)" fill="#a6c9ce"/>
+  <ellipse cx="1379" cy="829" rx="4" ry="9" transform="rotate(-24 1379 829)" fill="#d2e1d7"/>
+  <g fill="url(#steel)" stroke="#142b38" stroke-width="4"><circle cx="1414" cy="750" r="48"/><circle cx="1512" cy="717" r="56"/></g>
+  <g fill="#17323f" stroke="#9cafb2" stroke-opacity=".55" stroke-width="1.5">
+    <circle cx="1414" cy="750" r="8"/><circle cx="1395" cy="724" r="11"/><circle cx="1440" cy="734" r="11"/><circle cx="1432" cy="776" r="11"/><circle cx="1387" cy="768" r="11"/>
+    <circle cx="1512" cy="717" r="9"/><circle cx="1493" cy="685" r="14"/><circle cx="1544" cy="699" r="14"/><circle cx="1532" cy="749" r="14"/><circle cx="1480" cy="736" r="14"/>
+  </g>
+  <path d="M1440 788L1466 771 1475 758M1549 845C1587 863 1520 878 1591 899" stroke="#102837" stroke-width="9" fill="none"/>
+  <path d="M1549 845C1587 863 1520 878 1591 899" stroke="#8c9c9e" stroke-opacity=".4" stroke-width="2" stroke-dasharray="3 7" fill="none"/>
+  <path d="M0 0H1600V900H0Z" filter="url(#grain)" opacity=".55"/>
+</svg>

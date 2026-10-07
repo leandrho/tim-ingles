@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tim Burton — Filmmaker and Artist</title>
+  <meta name="description" content="A presentation about Tim Burton, his life, artistic style, influences and cultural impact.">
+  <link rel="icon" type="image/svg+xml" href="public/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="hero-active">
+  <!-- Progress bar -->
+  <div id="progress"></div>
+
+  <!-- Global snow canvas -->
+  <canvas id="snow-canvas" aria-hidden="true"></canvas>
+
+  <!-- Audio -->
+  <audio id="theme-audio" src="assets/audio/theme.mp3" loop preload="none"></audio>
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="logo">Tim Burton</div>
+    <div class="topbar-right">
+      <button id="audio-btn" class="audio-btn" aria-label="Toggle music" aria-pressed="false">
+        <span class="icon">♪</span>
+        <span class="label">Sound off</span>
+      </button>
+        <span class="hint">Scroll or use the arrow keys</span>
+    </div>
+  </header>
+
+  <!-- Dot nav -->
+  <nav class="dots" aria-label="Slide navigation">
+    <button data-target="hero" class="dot active" aria-label="Go to introduction"><span></span></button>
+    <button data-target="biography" class="dot" aria-label="Go to biography"><span></span></button>
+    <button data-target="career" class="dot dot--career" aria-label="Go to education and career"><span></span></button>
+    <button data-target="works" class="dot" aria-label="Go to selected films"><span></span></button>
+    <button data-target="style" class="dot" aria-label="Go to artistic style"><span></span></button>
+    <button data-target="influences" class="dot" aria-label="Go to key influences"><span></span></button>
+    <button data-target="impact" class="dot" aria-label="Go to achievements and cultural impact"><span></span></button>
+    <button data-target="conclusion" class="dot" aria-label="Go to conclusion"><span></span></button>
+    <button data-target="thanks" class="dot" aria-label="Go to thank-you slide"><span></span></button>
+  </nav>
+
+  <!-- Scissor transition overlay -->
+  <div id="scissor-overlay" aria-hidden="true">
+    <div class="scissor-half top">
+      <img id="transition-artwork" class="transition-artwork" alt="">
+    </div>
+    <div class="scissor-half bottom"></div>
+    <div class="transition-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="10" width="14" height="9" rx="1.5"></rect>
+        <path d="m17 12 4-2.5v10L17 17"></path>
+        <circle cx="7" cy="5.5" r="2"></circle>
+        <circle cx="13.5" cy="5.5" r="2"></circle>
+        <path d="m6 7.3 1 2.7m5.5-2.7 1 2.7"></path>
+      </svg>
+    </div>
+  </div>
+
+  <main class="slides">
+    <!-- SLIDE 1 HERO -->
+    <section id="hero" class="slide slide--hero" data-index="0">
+      <div class="hero-bg">
+        <img class="hero-artwork" src="assets/images/edward-opening.webp" alt="Edward Scissorhands carving an ice sculpture in a moonlit garden.">
+      </div>
+      <div class="slide-inner hero-inner">
+        <h1 class="hero-title">Tim Burton</h1>
+        <p class="hero-tagline">the child who drew monsters</p>
+      </div>
+      <div class="scroll-indicator"><span></span></div>
+    </section>
+
+    <!-- SLIDE 2 BIO - with real Tim photo -->
+    <section id="biography" class="slide slide--boy" data-index="1">
+      <div class="slide-inner grid-2">
+        <div class="sketch-col reveal">
+          <div class="tim-photo-wrap">
+            <img src="assets/images/tim_burton.webp" alt="Portrait of Tim Burton." loading="lazy" width="2048" height="2048">
+          </div>
+          <div class="bio-stats">
+            <span>Born in 1958</span><span>Burbank, California</span>
+          </div>
+        </div>
+        <div class="text-col">
+          <p class="kicker reveal">Biography</p>
+          <h2 class="slide-title reveal">Drawing, films<br><span class="accent">and imagination.</span></h2>
+          <div class="copy reveal">
+            <p><strong>Tim Burton</strong> was interested in drawing and films when he was a child.</p>
+            <p>He especially liked <strong>monsters, horror stories, fantasy and old movies</strong>. These childhood interests later influenced his films and illustrations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="career" class="slide slide--career" data-index="2">
+      <img class="career-artwork" src="assets/images/animation-studio.svg" alt="" aria-hidden="true" width="1600" height="900">
+      <div class="career-overlay" aria-hidden="true"></div>
+      <div class="slide-inner career-inner">
+        <div class="career-copy">
+          <p class="kicker reveal light">Education and career</p>
+          <h2 class="slide-title reveal light">From art school<br><span class="light-accent">to animation.</span></h2>
+          <p class="career-desc reveal light">He studied at the California Institute of the Arts. Later, he worked as an animator at Disney. He became a successful filmmaker and visual artist.</p>
+        </div>
+        <div class="tim-sketch-gallery reveal" role="group" aria-label="Early character sketches by Tim Burton">
+          <figure class="tim-sketch tim-sketch--01">
+            <img src="assets/images/primeros-dibujos/dibujo01.jpeg" alt="Tim Burton character sketch of two strange, wide-eyed figures." loading="lazy" decoding="async" width="525" height="584">
+          </figure>
+          <figure class="tim-sketch tim-sketch--02">
+            <img src="assets/images/primeros-dibujos/dibujo02.jpeg" alt="Tim Burton character sketch of a tall, thin figure with a small creature on its head." loading="lazy" decoding="async" width="554" height="554">
+          </figure>
+          <figure class="tim-sketch tim-sketch--03">
+            <img src="assets/images/primeros-dibujos/dibujo03.jpeg" alt="Tim Burton's early sketch of a thin, scissors-handed character." loading="lazy" decoding="async" width="420" height="665">
+          </figure>
+          <figure class="tim-sketch tim-sketch--04">
+            <img src="assets/images/primeros-dibujos/dibujo04.jpeg" alt="Tim Burton illustration of a pale, wide-eyed couple in a wedding scene." loading="lazy" decoding="async" width="350" height="455">
+          </figure>
+          <figure class="tim-sketch tim-sketch--05">
+            <img src="assets/images/primeros-dibujos/dibujo05.jpeg" alt="Tim Burton sketch of Jack Skellington wearing a bat-shaped suit." loading="lazy" decoding="async" width="736" height="953">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="works" class="slide slide--films" data-index="3">
+      <div class="slide-inner">
+        <p class="kicker reveal center">Selected work</p>
+        <h2 class="slide-title reveal center">Films and <span class="accent">characters</span></h2>
+        <p class="slide-subtitle reveal center">His films often have unusual characters and fantastic worlds.</p>
+        <div class="films-grid reveal">
+          <article class="film-card film-featured">
+            <img src="assets/images/movies/beetlejuice.jpg" alt="Beetlejuice film artwork; this image is from the 2024 sequel." loading="lazy" decoding="async">
+            <div class="film-card-body">
+              <time class="film-year" datetime="1988">1988</time>
+              <h3>Beetlejuice</h3>
+            </div>
+          </article>
+          <article class="film-card">
+            <img src="assets/images/movies/edward-scissorhonds-movie.jpg" alt="Edward Scissorhands film artwork." loading="lazy" decoding="async">
+            <div class="film-card-body">
+              <time class="film-year" datetime="1990">1990</time>
+              <h3>Edward Scissorhands</h3>
+            </div>
+          </article>
+          <article class="film-card">
+            <img src="assets/images/movies/elextranomundodejack.webp" alt="The Nightmare Before Christmas film artwork." loading="lazy" decoding="async">
+            <div class="film-card-body">
+              <time class="film-year" datetime="1993">1993</time>
+              <h3>The Nightmare Before Christmas</h3>
+            </div>
+          </article>
+          <article class="film-card">
+            <img src="assets/images/movies/corpse-bride.jpg" alt="Corpse Bride film artwork." loading="lazy" decoding="async">
+            <div class="film-card-body">
+              <time class="film-year" datetime="2005">2005</time>
+              <h3>Corpse Bride</h3>
+            </div>
+          </article>
+          <article class="film-card">
+            <img src="assets/images/movies/charlie-and-the-chocolate-factory.jpg" alt="Charlie and the Chocolate Factory film artwork." loading="lazy" decoding="async">
+            <div class="film-card-body">
+              <time class="film-year" datetime="2005">2005</time>
+              <h3>Charlie and the Chocolate Factory</h3>
+            </div>
+          </article>
+          <article class="film-card">
+            <img src="assets/images/movies/alice-in-wonderland-movie.jpg" alt="Alice in Wonderland film artwork." loading="lazy" decoding="async">
+            <div class="film-card-body">
+              <time class="film-year" datetime="2010">2010</time>
+              <h3>Alice in Wonderland</h3>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="style" class="slide slide--contrast" data-index="4">
+      <img class="style-artwork" src="assets/images/contrasting-worlds.svg" alt="" aria-hidden="true" width="1600" height="900">
+      <div class="slide-inner">
+        <p class="kicker reveal center">Artistic style</p>
+        <h2 class="slide-title reveal center">Dark and <span class="vs">imaginative</span></h2>
+        <p class="slide-subtitle reveal center">His work is Gothic, strange, surreal and easy to recognize.</p>
+
+        <div class="contrast-wrap reveal">
+          <div class="contrast-card contrast-visual">
+            <div class="card-head">Appearance</div>
+            <ul>
+              <li>Pale faces and big eyes.</li>
+              <li>Unusual bodies and dark clothes.</li>
+              <li>Dark settings, unusual buildings and fantastic places.</li>
+            </ul>
+          </div>
+
+          <div class="contrast-divider" id="divider">
+            <div class="divider-line"></div>
+            <div class="divider-handle">Drag</div>
+          </div>
+
+          <div class="contrast-card contrast-story">
+            <div class="card-head">Stories and feelings</div>
+            <ul>
+              <li>Dark stories can also be funny.</li>
+              <li>His characters have strong personalities and emotions.</li>
+              <li>Many characters feel different from society.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="contrast-foot reveal center">His unusual art shows that different ideas can be creative.</p>
+      </div>
+    </section>
+
+    <section id="influences" class="slide slide--edward" data-index="5">
+      <div class="slide-inner grid-2">
+        <div class="text-col">
+          <p class="kicker reveal">Key influences</p>
+          <h2 class="slide-title reveal">Stories, art<br><span class="accent">and imagination.</span></h2>
+          <div class="copy reveal">
+            <p>Burton was influenced by <strong>horror films, fantasy, Gothic art, animation and old movies</strong>.</p>
+            <p>He liked stories by <strong>Edgar Allan Poe</strong> and the work of actor <strong>Vincent Price</strong>, who appeared in many horror films.</p>
+            <p>His childhood interest in drawing monsters and strange characters later influenced his films and illustrations.</p>
+          </div>
+        </div>
+        <div class="visual-col reveal">
+          <div class="edward-card">
+            <div class="card-body">
+              <h3>Influences</h3>
+              <p class="traits">Horror · fantasy · art · animation</p>
+              <p class="small">His early interests became part of his visual style.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="impact" class="slide slide--impact" data-index="6">
+      <div class="ice-bg">
+        <img class="impact-artwork" src="assets/images/museum-gallery.svg" alt="" aria-hidden="true" width="1600" height="900">
+        <div class="ice-vignette"></div>
+      </div>
+      <div class="slide-inner ice-inner">
+        <p class="kicker reveal light">Achievements and cultural impact</p>
+        <h2 class="slide-title reveal light">Recognized around<br><span class="light-accent">the world.</span></h2>
+        <div class="ice-copy reveal light">
+          <p>His films have been shown and enjoyed in many countries.</p>
+          <p>He has received important awards and nominations for his work.</p>
+          <p>His films and characters are part of popular culture. Edward Scissorhands, Jack Skellington and Beetlejuice are known internationally.</p>
+          <p class="ice-poetic">His unusual characters, dark atmosphere and fantastic worlds make his style easy to recognize.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="conclusion" class="slide slide--legacy" data-index="7">
+      <div class="slide-inner">
+        <p class="kicker reveal center">Conclusion</p>
+        <h2 class="slide-title reveal center">A creative voice<br><span class="accent">recognized worldwide.</span></h2>
+        <div class="legacy-grid reveal">
+          <div class="legacy-card">
+            <div class="num">01</div>
+            <h3>An original style</h3>
+            <p>His work combines fantasy, horror, Gothic art, animation and imagination.</p>
+          </div>
+          <div class="legacy-card">
+            <div class="num">02</div>
+            <h3>Popular characters</h3>
+            <p>His characters and stories are part of popular culture and remain popular worldwide.</p>
+          </div>
+          <div class="legacy-card">
+            <div class="num">03</div>
+            <h3>A lasting influence</h3>
+            <p>His work has influenced modern visual culture.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="thanks" class="slide slide--thanks" data-index="8" aria-label="Thank you">
+      <img class="thanks-artwork" src="assets/images/thanks2.png" alt="A moonlit gothic landscape with a distant castle, a figure and a cat." width="1672" height="941">
+      <div class="slide-inner thanks-inner">
+        <h2 class="thanks-title reveal">Thank You!</h2>
+      </div>
+      <footer class="footer">Agustina Miranda - Leandro Ruiz - IDI ULP Level 9 - October 2026</footer>
+    </section>
+  </main>
+
+  <script src="vendor/gsap/gsap.min.js"></script>
+  <script src="vendor/gsap/ScrollTrigger.min.js"></script>
+  <script src="js/snow.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

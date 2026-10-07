@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="wall" x2=".85" y2="1"><stop stop-color="#0a1421"/><stop offset=".6" stop-color="#24323a"/><stop offset="1" stop-color="#101d29"/></linearGradient>
+    <linearGradient id="velvet"><stop stop-color="#111923"/><stop offset=".18" stop-color="#49343e"/><stop offset=".34" stop-color="#1f222d"/><stop offset=".53" stop-color="#57414a"/><stop offset=".7" stop-color="#22212d"/><stop offset=".88" stop-color="#3c2d37"/><stop offset="1" stop-color="#101b28"/></linearGradient>
+    <linearGradient id="valance" x2="0" y2="1"><stop stop-color="#22212b"/><stop offset=".62" stop-color="#46343d"/><stop offset="1" stop-color="#17222e"/></linearGradient>
+    <linearGradient id="floor" x2=".2" y2="1"><stop stop-color="#655448"/><stop offset=".35" stop-color="#34373b"/><stop offset="1" stop-color="#0a1623"/></linearGradient>
+    <linearGradient id="beam" x2="0" y2="1"><stop stop-color="#d6c5a7" stop-opacity=".14"/><stop offset="1" stop-color="#b2c4ca" stop-opacity="0"/></linearGradient>
+    <radialGradient id="wash"><stop stop-color="#afc4ca" stop-opacity=".14"/><stop offset="1" stop-color="#afc4ca" stop-opacity="0"/></radialGradient>
+    <pattern id="wallpaper" width="46" height="85" patternUnits="userSpaceOnUse"><path d="M23 0V85M20 0V85" stroke="#8ca0a5" stroke-opacity=".025"/><path d="M23 25Q11 38 23 51Q35 38 23 25Z" fill="none" stroke="#a7aaa0" stroke-opacity=".035"/></pattern>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" seed="42"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".04"/></feComponentTransfer></filter>
+  </defs>
+  <!-- The scenery contains no counterfeit posters; replaceable images live above it. -->
+  <path d="M0 0H1600V900H0Z" fill="url(#wall)"/>
+  <path d="M80 60H1520V722H80Z" fill="url(#wallpaper)"/>
+  <ellipse cx="1110" cy="385" rx="605" ry="420" fill="url(#wash)"/>
+  <path d="M725 84L485 704 1134 711 829 84Z" fill="url(#beam)"/>
+  <path d="M1237 79L958 710 1528 713 1280 79Z" fill="url(#beam)"/>
+  <path d="M75 703H1527V732H75Z" fill="#172531"/>
+  <path d="M78 703H1520M78 710H1520" stroke="#849086" stroke-opacity=".22" fill="none"/>
+  <path d="M0 726L1600 711V900H0Z" fill="url(#floor)"/>
+  <g fill="none" stroke="#ab9680" stroke-opacity=".12">
+    <path d="M0 757L1600 744M0 808L1600 795M0 877L1600 860"/>
+    <path d="M153 724L-57 900M399 723L262 900M647 720L602 900M891 718L943 900M1138 715L1280 900M1384 713L1620 900"/>
+    <path d="M812 762Q902 767 985 761M354 813Q446 808 531 814M1226 872Q1315 866 1423 871" stroke-opacity=".08"/>
+  </g>
+  <!-- Weight, curved hems and layered folds keep the curtains theatrical, not flat ribbons. -->
+  <path d="M0 0H184C208 131 195 304 151 441C136 495 158 560 137 643L97 805 0 851Z" fill="url(#velvet)"/>
+  <path d="M1600 0H1456C1419 144 1458 298 1499 434C1510 478 1489 551 1512 649L1548 814 1600 846Z" fill="url(#velvet)"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M47 0C68 156 118 296 67 455S54 665 20 821M112 0C152 176 143 321 112 430M167 0C192 175 165 320 142 411M1483 0C1449 188 1489 345 1522 434M1541 0C1499 176 1530 362 1565 461S1556 698 1586 823" stroke="#a08b81" stroke-opacity=".16" stroke-width="2"/>
+    <path d="M78 0C94 167 127 306 85 444M139 11C174 155 159 294 125 427M1515 0C1472 209 1524 371 1537 432" stroke="#0b1521" stroke-opacity=".45" stroke-width="8"/>
+    <path d="M13 469Q68 480 145 437M1507 441Q1546 469 1602 477" stroke="#938172" stroke-width="5" stroke-opacity=".4"/>
+    <path d="M134 446Q163 484 143 526M1517 451Q1485 484 1512 529" stroke="#b49d7a" stroke-width="2" stroke-opacity=".5"/>
+  </g>
+  <path d="M0 0H1600V67C1468 152 1320 120 1192 70C1081 148 943 152 804 78C664 154 533 142 401 77C248 149 136 135 0 75Z" fill="url(#valance)"/>
+  <path d="M0 73C139 132 252 139 401 79C532 145 665 151 804 81C944 151 1080 144 1192 73C1326 122 1468 145 1600 69" stroke="#8a7864" stroke-opacity=".35" stroke-width="3" fill="none"/>
+  <path d="M0 16H1600" stroke="#a89b85" stroke-opacity=".08" stroke-width="2"/>
+  <g fill="#13212b" stroke="#5c6a6e" stroke-width="1.5">
+    <path d="M752 55L746 81 770 89 782 66Z"/><path d="M1247 54L1241 81 1268 88 1279 65Z"/>
+  </g>
+  <g fill="#c1b69c" opacity=".35"><path d="M746 82L770 90 765 93 744 86Z"/><path d="M1242 83L1268 90 1264 94 1240 87Z"/></g>
+  <path d="M0 882Q80 840 161 881Q223 847 303 892Q390 853 477 900H0ZM1342 900Q1440 852 1516 886Q1554 854 1600 875V900Z" fill="#07111d"/>
+  <path d="M0 0H1600V900H0Z" filter="url(#grain)" opacity=".55"/>
+</svg>
