@@ -211,21 +211,45 @@
         </div>
 
         <p class="contrast-foot reveal center">His unusual art shows that different ideas can be creative.</p>
-        <div class="fearful-eyes reveal" aria-hidden="true">
-          <svg viewBox="0 0 160 76" role="presentation" focusable="false">
-            <g class="eyes-open">
-              <path class="eye-brow" d="M13 25Q34 8 67 20M93 20Q125 7 148 25" />
-              <path class="eye-white" d="M13 43Q38 14 69 42Q43 70 13 43ZM91 42Q122 13 148 43Q119 70 91 42Z" />
-              <path class="eye-iris" d="M35 41a9 11 0 1 0 18 0a9 11 0 1 0-18 0ZM108 41a9 11 0 1 0 18 0a9 11 0 1 0-18 0Z" />
-              <ellipse class="eye-pupil" cx="45" cy="41" rx="3.3" ry="5.3" />
-              <ellipse class="eye-pupil" cx="117" cy="41" rx="3.3" ry="5.3" />
-              <circle class="eye-glint" cx="48" cy="37" r="1.7" />
-              <circle class="eye-glint" cx="120" cy="37" r="1.7" />
-              <path class="eye-vein" d="m20 50-4 5m11-3-2 6m117-8 5 5m-12-2 2 6" />
+        <div class="fearful-eyes" aria-hidden="true">
+          <svg viewBox="0 0 520 310" focusable="false">
+            <defs>
+              <radialGradient id="spectral-eye" cx="52%" cy="52%" r="66%">
+                <stop offset="0" stop-color="#92999d" />
+                <stop offset=".6" stop-color="#e7e7e2" />
+                <stop offset="1" stop-color="#fff" />
+              </radialGradient>
+              <clipPath id="spectral-lid-left" clipPathUnits="userSpaceOnUse">
+                <path class="eye-lid" d="M26 94C56 113 99 130 129 129C168 128 205 112 226 97C205 112 168 128 129 129C99 130 56 113 26 94Z" data-angry="M28 77C61 45 98 60 129 78C163 90 191 102 221 113C217 141 171 173 129 169C76 169 28 150 28 77Z" />
+              </clipPath>
+              <clipPath id="spectral-lid-right" clipPathUnits="userSpaceOnUse">
+                <path class="eye-lid" d="M294 96C319 114 355 129 391 128C429 126 466 109 495 87C466 109 429 126 391 128C355 129 319 114 294 96Z" data-angry="M299 113C330 102 365 87 391 72C433 48 472 56 495 84C503 142 452 172 391 165C348 164 307 135 299 113Z" />
+              </clipPath>
+            </defs>
+            <g class="fearful-eye" clip-path="url(#spectral-lid-left)">
+              <path class="eye-socket" d="M26 94C22 25 77 9 129 27C175 37 209 57 226 97C217 138 171 173 129 169C76 169 28 150 26 94Z" />
             </g>
-            <g class="eyes-closed">
-              <path d="M13 43Q40 49 69 42M91 42Q120 49 148 43" />
-              <path d="m34 48-3 5m95-5 3 5" />
+            <g class="fearful-eye" clip-path="url(#spectral-lid-right)">
+              <path class="eye-socket" d="M294 96C311 55 346 40 391 27C442 12 489 24 495 87C503 142 452 172 391 165C348 164 307 135 294 96Z" />
+            </g>
+            <g class="spectral-smile">
+              <path class="smile-curve" d="M260 266C194 277 106 249 48 195" />
+              <path class="smile-curve" d="M260 266C337 266 426 244 472 187" />
+              <path class="smile-stitch" d="M52.1 212.5Q56.8 204.4 65.4 196.3" />
+              <path class="smile-stitch" d="M74.5 232.8Q83.9 221.6 89.4 210.3" />
+              <path class="smile-stitch" d="M105.8 249.2Q109.2 238.4 116.6 227.7" />
+              <path class="smile-stitch" d="M137 265.4Q144 251.7 147 238.1" />
+              <path class="smile-stitch" d="M171 272Q171.6 261.3 176.1 250.6" />
+              <path class="smile-stitch" d="M203.4 280.3Q207 266.9 206.5 253.5" />
+              <path class="smile-stitch" d="M235.7 280.8Q233.4 268.3 235.1 255.8" />
+              <path class="smile-stitch" d="M259.5 253Q264 266 258 282" />
+              <path class="smile-stitch" d="M285 252.7Q283.8 265.2 286.6 277.7" />
+              <path class="smile-stitch" d="M317.5 250.8Q321.1 261.7 320.8 272.6" />
+              <path class="smile-stitch" d="M349 241.6Q350.3 255.2 355.6 268.8" />
+              <path class="smile-stitch" d="M380.4 234.7Q386.4 245.5 388.3 256.3" />
+              <path class="smile-stitch" d="M407.7 219.6Q412.4 232.5 421 245.3" />
+              <path class="smile-stitch" d="M434.1 205.7Q443.5 215.8 448.9 225.9" />
+              <path class="smile-stitch" d="M455.7 189.6Q461.3 196.9 470.8 204.2" />
             </g>
           </svg>
         </div>
@@ -310,5 +334,6 @@
   <script src="vendor/gsap/ScrollTrigger.min.js"></script>
   <script src="js/snow.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/eyes.js"></script>
 </body>
 </html>

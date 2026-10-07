@@ -225,32 +225,6 @@ setTimeout(()=>{
     if(rect.top < window.innerHeight*1.1) el.classList.add('is-visible');
   });
 }, 1200);
-// Contrast divider drag
-const divider = document.getElementById('divider');
-if(divider){
-  let dragging=false;
-  const handle = divider.querySelector('.divider-handle');
-  handle.addEventListener('mousedown', ()=>{dragging=true; handle.style.cursor='grabbing'});
-  window.addEventListener('mouseup', ()=>{dragging=false; handle.style.cursor='grab'});
-  window.addEventListener('mousemove', e=>{
-    if(!dragging) return;
-    const wrap = document.querySelector('.contrast-wrap');
-    const rect = wrap.getBoundingClientRect();
-    const pct = Math.max(0.2, Math.min(0.8, (e.clientX-rect.left)/rect.width));
-    wrap.style.gridTemplateColumns = `${pct}fr 46px ${1-pct}fr`;
-    if(window.innerWidth<900) wrap.style.gridTemplateColumns='1fr';
-  });
-  handle.addEventListener('touchstart', ()=>dragging=true,{passive:true});
-  window.addEventListener('touchend', ()=>dragging=false);
-  window.addEventListener('touchmove', e=>{
-    if(!dragging||!e.touches[0]) return;
-    const wrap=document.querySelector('.contrast-wrap');
-    const rect=wrap.getBoundingClientRect();
-    const pct=Math.max(0.2,Math.min(0.8,(e.touches[0].clientX-rect.left)/rect.width));
-    wrap.style.gridTemplateColumns=`${pct}fr 46px ${1-pct}fr`;
-  },{passive:true});
-}
-
 if(window.matchMedia('(prefers-reduced-motion: reduce)').matches && hasGSAP){
   gsap.globalTimeline.clear();
 }

@@ -135,16 +135,22 @@ body.hero-active .topbar{justify-content:flex-end}
 .contrast-story{background:linear-gradient(180deg,rgba(26,26,46,.92),rgba(11,11,13,.94))}
 .palette{display:flex;gap:6px;margin-bottom:14px}
 .palette span{width:100%;height:18px;border-radius:999px;border:1px solid rgba(255,255,255,.12)}
-.contrast-card ul{list-style:none;display:grid;gap:6px;font-size:var(--presentation-body-size);opacity:.85;line-height:1.6}
+.contrast-card ul{list-style:none;display:grid;gap:6px;font-size:calc(var(--presentation-body-size) - 2px);opacity:.85;line-height:1.6}
 .contrast-card ul li{padding-left:14px;position:relative}
 .contrast-card ul li::before{content:"—";position:absolute;left:0;opacity:.5}
 .mini-houses{display:flex;gap:6px;margin-top:14px}
 .mini-houses i{width:100%;height:18px;background:currentColor;opacity:.15;border-radius:2px}
 .mini-edward{margin-top:14px;font-size:22px;opacity:.6;letter-spacing:8px}
-.contrast-divider{width:46px;background:rgba(255,255,255,.06);display:grid;place-items:center;position:relative;border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06)}
+.contrast-divider{width:20px;background:rgba(255,255,255,.025);position:relative;border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06)}
 .divider-line{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--pink);translate:-50% 0;opacity:.7}
-.divider-handle{position:relative;z-index:2;width:46px;height:46px;border-radius:50%;background:var(--pink);color:var(--gothic);display:grid;place-items:center;font-size:max(1rem,calc(.6rem + 5px));font-weight:800;letter-spacing:.06em;text-transform:uppercase;box-shadow:0 8px 18px rgba(255,107,157,.4);cursor:grab}
 .contrast-foot{margin-top:14px;opacity:.55;font-size:calc(.82rem + 5px)}
+.fearful-eyes{width:min(360px,80vw);margin:8px auto 0;translate:0 2rem;pointer-events:none}
+.fearful-eyes svg{display:block;width:100%;height:auto;overflow:visible;opacity:.42}
+.fearful-eye{visibility:hidden}
+.eye-socket{fill:url(#spectral-eye)}
+.spectral-smile{visibility:hidden;fill:none;stroke:#f0f0eb;stroke-linecap:round;stroke-linejoin:round}
+.smile-curve{stroke-width:4.5}
+.smile-stitch{stroke-width:3.5}
 
 /* edward */
 .slide--edward{
@@ -281,8 +287,8 @@ html.js .reveal.no-anim{opacity:1;transform:none}
 @media(max-width:900px){
   .grid-2{grid-template-columns:1fr;gap:28px}
   .contrast-wrap{grid-template-columns:1fr;max-width:420px}
-  .contrast-divider{width:100%;height:46px;display:flex}
-  .divider-line{width:100%;height:2px;top:50%;left:0;translate:0 -50%}
+  .contrast-divider{width:100%;height:18px;background:transparent;border:0}
+  .divider-line{width:2px;height:100%;top:0;left:50%;translate:-50% 0}
   .edward-card{margin:0 auto}
   .legacy-grid{grid-template-columns:1fr}
   .slide{min-height:auto;padding:72px 0 36px}
