@@ -13,6 +13,8 @@ class SnowSystem {
     this.emitting = false;
     this.emitter = { x: 0.5, y: 0.32 }; // normalized
     this.lastEmit = 0;
+    this.active = true;
+    this.frameId = null;
     this.init();
   }
   init() {
@@ -26,7 +28,7 @@ class SnowSystem {
       if(e.touches[0]) this.wind = (e.touches[0].clientX / this.w - 0.5) * 1.4;
     }, {passive:true});
     this.spawnBase();
-    requestAnimationFrame(t=>this.frame(t));
+    this.frameId = requestAnimationFrame(t=>this.frame(t));
   }
   resize(){
     this.w = window.innerWidth;
@@ -92,7 +94,19 @@ class SnowSystem {
     this.emitting = on;
     this.canvas.style.opacity = on ? '1' : '.72';
   }
+  setActive(on){
+    if(this.active === on) return;
+    this.active = on;
+    if(on){
+      this.frameId = requestAnimationFrame(t=>this.frame(t));
+    } else {
+      cancelAnimationFrame(this.frameId);
+      this.frameId = null;
+      this.ctx.clearRect(0,0,this.w,this.h);
+    }
+  }
   frame(t){
+    if(!this.active) return;
     this.ctx.clearRect(0,0,this.w,this.h);
     // subtle gradient veil for ice slide could be handled by css
     const total = this.particles.length;
@@ -139,7 +153,7 @@ class SnowSystem {
         else this.draw(p,true);
       }
     }
-    requestAnimationFrame(t=>this.frame(t));
+    this.frameId = requestAnimationFrame(t=>this.frame(t));
   }
   draw(p, glow=false){
     this.ctx.save();

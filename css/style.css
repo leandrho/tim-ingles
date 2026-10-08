@@ -29,6 +29,7 @@ button{font:inherit;cursor:pointer}
 
 /* snow canvas */
 #snow-canvas{position:fixed;inset:0;pointer-events:none;z-index:3;opacity:.9}
+body.thanks-active #snow-canvas{visibility:hidden}
 
 /* topbar */
 .topbar{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:20;background:linear-gradient(180deg,rgba(11,11,13,.9),transparent);backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
@@ -216,6 +217,11 @@ body.hero-active .topbar{justify-content:flex-end}
 }
 .thanks-artwork{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:.6;filter:saturate(.82)}
 .slide--thanks::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(6,8,13,.16),rgba(6,8,13,.08) 48%,rgba(6,8,13,.2))}
+.thanks-smoke{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;opacity:0;transition:opacity 1.4s ease}
+.thanks-smoke.is-active{opacity:1}
+.thanks-smoke.is-fallback{background:url("../assets/images/smoke.svg") center/cover;mask-image:linear-gradient(180deg,transparent 12%,rgba(0,0,0,.12) 38%,#000 70%,rgba(0,0,0,.65))}
+.thanks-smoke.is-fallback.is-active{opacity:.38;animation:smoke-drift 18s ease-in-out infinite alternate}
+@keyframes smoke-drift{from{transform:translate3d(-5%,2%,0) scale(1.14)}to{transform:translate3d(5%,-2%,0) scale(1.2)}}
 .thanks-inner{position:relative;z-index:4}
 .thanks-title{margin:0;color:var(--bone);font-family:'Cinzel Decorative',serif;font-size:clamp(calc(3rem + 5px),calc(11vw + 5px),calc(8.5rem + 5px));line-height:1.12;text-shadow:0 4px 28px rgba(0,0,0,.9)}
 .slide--thanks .footer{z-index:4;font-size:calc(1.68rem + 5px);line-height:1.5}
@@ -304,4 +310,6 @@ html.js .reveal.no-anim{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none}
   #snow-canvas{display:none}
+  .thanks-smoke{transition:none}
+  .thanks-smoke.is-fallback.is-active{animation:none}
 }

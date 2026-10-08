@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <filter id="mist" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".008 .018" numOctaves="5" seed="17"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 .40  0 0 0 0 .49  0 0 0 0 .60  1.4 0 0 0 -.35"/>
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+  </defs>
+  <path fill="#687d99" filter="url(#mist)" d="M0 0h1200v700H0z"/>
+</svg>

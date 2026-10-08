@@ -46,6 +46,43 @@ const snowCanvas = document.getElementById('snow-canvas');
 const snow = new SnowSystem(snowCanvas);
 snow.setIntensity(30);
 
+// Mist belongs to the closing landscape, not the other slides.
+const smokeAssetVersion = '20261008-smoke-2';
+const thanksArtwork = document.querySelector('.thanks-artwork');
+let smokeCanvas = document.getElementById('smoke-canvas');
+let smoke = null;
+
+// An older cached HTML shell may be missing the canvas, stylesheet rules and smoke script.
+// Repair that shell without stopping navigation or leaving the snow visible on this slide.
+const stylesheet = document.querySelector('link[href*="css/style.css"]');
+if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== smokeAssetVersion){
+  stylesheet.href = 'css/style.css?v=' + smokeAssetVersion;
+}
+if(!smokeCanvas && thanksArtwork){
+  smokeCanvas = document.createElement('canvas');
+  smokeCanvas.id = 'smoke-canvas';
+  smokeCanvas.className = 'thanks-smoke';
+  smokeCanvas.setAttribute('aria-hidden', 'true');
+  thanksArtwork.after(smokeCanvas);
+}
+function initSmoke(){
+  if(!smokeCanvas || !thanksArtwork) return;
+  smokeCanvas.classList.remove('is-fallback');
+  smoke = new window.SmokeSystem(smokeCanvas, thanksArtwork);
+  smoke.setActive(document.body.classList.contains('thanks-active'));
+}
+if(smokeCanvas){
+  if(window.SmokeSystem?.assetVersion === smokeAssetVersion){
+    initSmoke();
+  } else {
+    smokeCanvas.classList.add('is-fallback');
+    const script = document.createElement('script');
+    script.src = 'js/smoke.js?v=' + smokeAssetVersion;
+    script.onload = initSmoke;
+    document.body.appendChild(script);
+  }
+}
+
 // Audio synth fallback (celesta-like)
 let audioCtx, gainNode, isSynthPlaying=false;
 function initSynth(){
@@ -135,13 +172,22 @@ function activate(i){
   if(dots[i]) dots[i].classList.add('active');
   const id = slides[i]?.id;
   document.body.classList.toggle('hero-active', id==='hero');
-  if(id==='hero'){
+  const isThanks = id==='thanks';
+  document.body.classList.toggle('thanks-active', isThanks);
+  snowCanvas.style.visibility = isThanks ? 'hidden' : '';
+  snow.setActive?.(!isThanks);
+  if(smoke) smoke.setActive(isThanks);
+  else if(smokeCanvas) smokeCanvas.classList.toggle('is-active', isThanks);
+  if(isThanks){
+    snow.setEmitting(false);
+    snowCanvas.style.opacity='0';
+  } else if(id==='hero'){
     snow.setEmitting(false);
     snowCanvas.style.opacity='.42';
   } else if(id==='career'){
     snow.setEmitting(false);
     snowCanvas.style.opacity='.12';
-  } else if(id==='conclusion' || id==='thanks'){
+  } else if(id==='conclusion'){
     snow.setEmitting(false);
     snowCanvas.style.opacity='.22';
   } else if(id==='impact'){
