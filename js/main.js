@@ -21,14 +21,30 @@ const curtainHoldDuration = 200;
 const scissorTransitionDuration = curtainMotionDuration + curtainHoldDuration;
 const transitionIconDuration = .1;
 const transitionArtworks = [
-  'assets/images/entre-diapositivas/pngwing.com.png',
-  'assets/images/entre-diapositivas/pngwing.com (1).png',
-  'assets/images/entre-diapositivas/pngwing.com (2).png',
-  'assets/images/entre-diapositivas/pngwing.com (3).png',
-  'assets/images/entre-diapositivas/pngwing.com (4).png',
-  'assets/images/entre-diapositivas/pngwing.com (5).png',
-  'assets/images/entre-diapositivas/pngwing.com (6).png',
+  'assets/images/entre-diapositivas/pngwing.com.webp',
+  'assets/images/entre-diapositivas/pngwing.com (1).webp',
+  'assets/images/entre-diapositivas/pngwing.com (2).webp',
+  'assets/images/entre-diapositivas/pngwing.com (3).webp',
+  'assets/images/entre-diapositivas/pngwing.com (4).webp',
+  'assets/images/entre-diapositivas/pngwing.com (5).webp',
+  'assets/images/entre-diapositivas/pngwing.com (6).webp',
 ];
+const transitionArtworkPreloads = [];
+const preloadTransitionArtworks = ()=>{
+  transitionArtworks.forEach(src=>{
+    const image = new Image();
+    image.decoding = 'async';
+    image.fetchPriority = 'low';
+    image.src = src;
+    image.decode().catch(()=>{});
+    transitionArtworkPreloads.push(image);
+  });
+};
+if('requestIdleCallback' in window){
+  window.requestIdleCallback(preloadTransitionArtworks,{timeout:1000});
+} else {
+  window.addEventListener('load',()=>setTimeout(preloadTransitionArtworks,250),{once:true});
+}
 let transitionArtworkIndex = 0;
 const transitionPlacements = [
   { curtain: 'top', left: '8%', right: 'auto', top: '8%', bottom: 'auto' },
