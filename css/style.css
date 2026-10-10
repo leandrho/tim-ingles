@@ -42,8 +42,7 @@ body.thanks-active #snow-canvas{visibility:hidden}
 .audio-btn:hover{background:rgba(255,255,255,.12)}
 .audio-btn .icon{width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--pink);color:var(--gothic);font-weight:700}
 .audio-btn.playing .icon{background:var(--mint)}
-body.hero-active .topbar .logo,
-body.hero-active .audio-btn .label{display:none}
+body.hero-active .topbar .logo{display:none}
 body.hero-active .topbar{justify-content:flex-end}
 
 /* dots */

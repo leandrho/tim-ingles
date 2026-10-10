@@ -71,7 +71,7 @@ let smoke = null;
 // An older cached HTML shell may be missing the canvas, stylesheet rules and smoke script.
 // Repair that shell without stopping navigation or leaving the snow visible on this slide.
 const stylesheet = document.querySelector('link[href*="css/style.css"]');
-const stylesheetAssetVersion = '20261010-influences-image-1';
+const stylesheetAssetVersion = '20261010-audio-icon-1';
 if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== stylesheetAssetVersion){
   stylesheet.href = 'css/style.css?v=' + stylesheetAssetVersion;
 }
@@ -159,7 +159,6 @@ let audioOn=false;
 function updateAudioButton(on){
   audioBtn.classList.toggle('playing', on);
   audioBtn.setAttribute('aria-pressed', String(on));
-  audioBtn.querySelector('.label').textContent = on ? 'Sound on' : 'Sound off';
 }
 function setAudio(on, immediate=false){
   if(on && closingMemory?.active){
