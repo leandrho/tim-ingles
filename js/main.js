@@ -71,8 +71,9 @@ let smoke = null;
 // An older cached HTML shell may be missing the canvas, stylesheet rules and smoke script.
 // Repair that shell without stopping navigation or leaving the snow visible on this slide.
 const stylesheet = document.querySelector('link[href*="css/style.css"]');
-if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== smokeAssetVersion){
-  stylesheet.href = 'css/style.css?v=' + smokeAssetVersion;
+const stylesheetAssetVersion = '20261010-navigation-1';
+if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== stylesheetAssetVersion){
+  stylesheet.href = 'css/style.css?v=' + stylesheetAssetVersion;
 }
 if(!smokeCanvas && thanksArtwork){
   smokeCanvas = document.createElement('canvas');
@@ -98,6 +99,15 @@ if(smokeCanvas){
     document.body.appendChild(script);
   }
 }
+
+// Keep the closing film's playback separate from the landscape's mist.
+const thanksVideo = document.getElementById('thanks-video');
+const closingMemory = thanksVideo && window.ClosingMemory
+  ? new window.ClosingMemory(thanksVideo, {
+      onEnter:()=>setAudio(false, true),
+      onSoundChange:on=>updateAudioButton(on),
+    })
+  : null;
 
 // Audio synth fallback (celesta-like)
 let audioCtx, gainNode, isSynthPlaying=false;
@@ -134,30 +144,47 @@ function playSynth(){
   };
   schedule();
 }
-function stopSynth(){
+function stopSynth(immediate=false){
   if(!audioCtx||!isSynthPlaying) return;
+  if(immediate){
+    gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    isSynthPlaying=false;
+    return;
+  }
   gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime+0.6);
   setTimeout(()=>isSynthPlaying=false,700);
 }
 let audioOn=false;
-function setAudio(on){
-  audioOn=on;
+function updateAudioButton(on){
   audioBtn.classList.toggle('playing', on);
   audioBtn.setAttribute('aria-pressed', String(on));
   audioBtn.querySelector('.label').textContent = on ? 'Sound on' : 'Sound off';
+}
+function setAudio(on, immediate=false){
+  if(on && closingMemory?.active){
+    closingMemory.setMuted(false);
+    return;
+  }
+  audioOn=on;
+  if(on) closingMemory?.setMuted(true);
+  updateAudioButton(on);
   if(on){
     if(audio.src && audio.src!==location.href){
-      audio.play().catch(()=>playSynth());
+      audio.play().catch(()=>{ if(audioOn && !closingMemory?.active) playSynth(); });
     } else {
       if(audioCtx && audioCtx.state==='suspended') audioCtx.resume();
       playSynth();
     }
   } else {
     audio.pause();
-    stopSynth();
+    stopSynth(immediate);
   }
 }
-audioBtn.addEventListener('click', ()=> setAudio(!audioOn));
+audioBtn.addEventListener('click', ()=>{
+  if(closingMemory?.active) closingMemory.setMuted(!thanksVideo.muted);
+  else setAudio(!audioOn);
+});
 audio.volume = 0.18;
 
 // Progress + dots
@@ -189,6 +216,8 @@ function activate(i){
   const id = slides[i]?.id;
   document.body.classList.toggle('hero-active', id==='hero');
   const isThanks = id==='thanks';
+  closingMemory?.setActive(isThanks);
+  if(!isThanks) updateAudioButton(audioOn);
   document.body.classList.toggle('thanks-active', isThanks);
   snowCanvas.style.visibility = isThanks ? 'hidden' : '';
   snow.setActive?.(!isThanks);
@@ -221,22 +250,31 @@ window.addEventListener('scroll', ()=>{
 });
 
 // Navigation
+const navigationMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+function currentSlideIndex(){
+  const index = dots.findIndex(dot=>dot.classList.contains('active'));
+  return index < 0 ? 0 : index;
+}
 dots.forEach(d=>{
   d.addEventListener('click', ()=>{
     const target = document.getElementById(d.dataset.target);
     if(!target) return;
-    scissorTransition(()=> target.scrollIntoView({behavior:'smooth'}));
+    go(slides.indexOf(target));
   });
 });
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
     e.preventDefault();
     const target=document.querySelector(a.getAttribute('href'));
-    if(target) scissorTransition(()=> target.scrollIntoView({behavior:'smooth'}));
+    if(target) go(slides.indexOf(target));
   });
 });
 function scissorTransition(cb){
   if(transitionInProgress) return;
+  if(navigationMotionQuery.matches){
+    cb && cb();
+    return;
+  }
   transitionInProgress = true;
   transitionArtwork.src = transitionArtworks[transitionArtworkIndex];
   transitionArtworkIndex = (transitionArtworkIndex + 1) % transitionArtworks.length;
@@ -262,15 +300,34 @@ function scissorTransition(cb){
   }, scissorTransitionDuration);
 }
 
-// Keyboard nav
-window.addEventListener('keydown', e=>{
-  const cur = dots.findIndex(d=>d.classList.contains('active'));
-  if(e.key==='ArrowDown' || e.key==='PageDown'){ e.preventDefault(); go(cur+1); }
-  if(e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); go(cur-1); }
-});
-function go(i){
-  if(i<0) i=0; if(i>=slides.length) i=slides.length-1;
-  scissorTransition(()=> slides[i].scrollIntoView({behavior:'smooth'}));
+function go(i, {align='start'}={}){
+  if(transitionInProgress || i<0 || i>=slides.length || i===currentSlideIndex()) return false;
+  scissorTransition(()=>{
+    const rect = slides[i].getBoundingClientRect();
+    const offset = align==='end' ? Math.max(0,rect.height-window.innerHeight) : 0;
+    // Change position only while the curtain is closed, without crossing other slides.
+    window.scrollTo({top:rect.top+window.scrollY+offset,behavior:'instant'});
+    activate(i);
+  });
+  return true;
+}
+let slideNavigation = null;
+function initSlideNavigation(){
+  slideNavigation = new window.SlideNavigation({
+    slides,
+    getCurrentIndex:currentSlideIndex,
+    navigate:go,
+    isTransitioning:()=>transitionInProgress,
+  });
+}
+if(window.SlideNavigation){
+  initSlideNavigation();
+} else {
+  // An older cached HTML shell may not include the new input controller yet.
+  const script = document.createElement('script');
+  script.src = 'js/slide-navigation.js?v=20261010-navigation-1';
+  script.onload = initSlideNavigation;
+  document.body.appendChild(script);
 }
 
 // Reveal observer
