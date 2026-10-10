@@ -71,7 +71,7 @@ let smoke = null;
 // An older cached HTML shell may be missing the canvas, stylesheet rules and smoke script.
 // Repair that shell without stopping navigation or leaving the snow visible on this slide.
 const stylesheet = document.querySelector('link[href*="css/style.css"]');
-const stylesheetAssetVersion = '20261010-navigation-1';
+const stylesheetAssetVersion = '20261010-influences-image-1';
 if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== stylesheetAssetVersion){
   stylesheet.href = 'css/style.css?v=' + stylesheetAssetVersion;
 }

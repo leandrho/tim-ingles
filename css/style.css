@@ -42,11 +42,8 @@ body.thanks-active #snow-canvas{visibility:hidden}
 .audio-btn:hover{background:rgba(255,255,255,.12)}
 .audio-btn .icon{width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--pink);color:var(--gothic);font-weight:700}
 .audio-btn.playing .icon{background:var(--mint)}
-.hint{font-size:calc(.7rem + 5px);letter-spacing:.08em;text-transform:uppercase;opacity:.55;display:none}
-@media(min-width:700px){.hint{display:block}}
 body.hero-active .topbar .logo,
-body.hero-active .audio-btn .label,
-body.hero-active .hint{display:none}
+body.hero-active .audio-btn .label{display:none}
 body.hero-active .topbar{justify-content:flex-end}
 
 /* dots */
@@ -193,8 +190,12 @@ body.hero-active .topbar{justify-content:flex-end}
 .influence-list li{position:relative;padding-left:23px;font-family:'Playfair Display',serif;font-size:clamp(20px,1.8vw,25px);line-height:1.4;color:var(--bone)}
 .influence-list li::before{content:"";position:absolute;left:0;top:.46em;width:14px;height:14px;background:url("../assets/images/pumpkin-list.svg") center/contain no-repeat;opacity:.85}
 .influence-group--interests .influence-list li{font-family:'Caveat',cursive;font-size:clamp(24px,2.1vw,29px);line-height:1.3}
-.influences-sketch{position:relative;margin:0 -24px 0 -12px;transform:rotate(5deg)}
-.influences-sketch img{display:block;width:100%;height:auto;filter:drop-shadow(0 8px 10px rgba(8,10,16,.35));opacity:.85}
+.influences-sketch{position:relative;margin:0 -16px 0 -4px;padding:6px 6px 0;border:1px solid rgba(237,233,230,.3);border-radius:4px;background:#0c111a;box-shadow:0 10px 22px rgba(8,10,16,.4);transform:rotate(4deg)}
+.influences-sketch img{display:block;width:100%;height:auto;border-radius:2px}
+.influences-sketch figcaption{font-size:13px;line-height:1.4;text-align:center;color:var(--bone)}
+.influences-sketch figcaption a{display:flex;align-items:center;justify-content:center;min-height:44px;transition:color .2s ease}
+.influences-sketch figcaption a:hover{color:var(--pink)}
+.influences-sketch figcaption a:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:2px}
 @media(max-width:1100px) and (min-width:769px){
   .influences-inner{gap:24px;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
   .influences-notebook{padding:28px 24px 28px 36px}
@@ -221,7 +222,7 @@ body.hero-active .topbar{justify-content:flex-end}
   .notebook-lists{padding-right:22px}
   .influence-list li{font-size:21px}
   .influence-group--interests .influence-list li{font-size:27px}
-  .influences-sketch{position:absolute;right:5px;top:48px;width:90px;margin:0;opacity:.12;pointer-events:none}
+  .influences-sketch{justify-self:end;width:140px;margin:10px 0 0;transform:rotate(3deg)}
 }
 @media(max-width:360px){
   .slide--edward .influences-inner{width:calc(100% - 68px);margin-left:18px;gap:20px}
