@@ -267,14 +267,18 @@ body.hero-active .topbar{justify-content:flex-end}
 .impact-portrait{min-width:0;margin:0;text-align:center}
 .impact-portrait-frame{position:relative;overflow:hidden;border:7px solid #151a24;outline:1px solid rgba(237,233,230,.26);border-radius:18px;background:#111821;box-shadow:0 16px 28px rgba(7,10,20,.45),inset 0 0 0 1px rgba(237,233,230,.1)}
 .impact-portrait-frame img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.65) contrast(1.05)}
-.impact-portrait--sleepy-hollow .impact-portrait-frame{height:clamp(230px,32vh,295px);transform:rotate(-4deg)}
-.impact-portrait--sleepy-hollow img{object-fit:contain;object-position:center}
+.impact-portrait--golden-lion .impact-portrait-frame{height:clamp(230px,32vh,295px);transform:rotate(-4deg)}
+.impact-portrait--golden-lion img{object-position:center top}
 .impact-portrait--jack{align-self:start}
 .impact-portrait--jack .impact-portrait-frame{height:clamp(280px,40vh,360px);outline-color:rgba(255,214,224,.45)}
 .impact-portrait--jack img{object-position:12% center}
-.impact-portrait--big-fish .impact-portrait-frame{height:clamp(235px,34vh,310px);transform:rotate(4deg)}
-.impact-portrait--big-fish img{object-fit:contain;object-position:center}
+.impact-portrait--exhibition .impact-portrait-frame{height:clamp(235px,34vh,310px);transform:rotate(4deg)}
+.impact-portrait--exhibition img{object-position:center}
 .impact-portrait figcaption{margin-top:18px;font-family:'Cinzel',serif;font-size:16px;line-height:1.45;color:var(--bone)}
+.impact-caption-detail{display:block;margin-top:4px;font-family:'Inter',system-ui,sans-serif;font-size:13px;line-height:1.4;color:var(--pink)}
+.impact-photo-credit{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:2px;font-family:'Inter',system-ui,sans-serif;font-size:12px;line-height:1.4;color:rgba(237,233,230,.78);text-decoration:underline;text-underline-offset:3px;transition:color .2s ease}
+.impact-photo-credit:hover{color:var(--pink)}
+.impact-photo-credit:focus-visible{color:var(--pink);outline:2px solid var(--pink);outline-offset:3px;border-radius:3px}
 @media(max-width:1100px) and (min-width:901px){
   .impact-stage{gap:28px;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
   .impact-gallery{gap:14px}
@@ -296,9 +300,9 @@ body.hero-active .topbar{justify-content:flex-end}
   .impact-points li::before{width:16px;height:16px}
   .impact-gallery{gap:12px;padding:10px 2px 6px}
   .impact-portrait-frame{border-width:4px;border-radius:12px}
-  .impact-portrait--sleepy-hollow .impact-portrait-frame{height:160px}
+  .impact-portrait--golden-lion .impact-portrait-frame{height:160px}
   .impact-portrait--jack .impact-portrait-frame{height:200px}
-  .impact-portrait--big-fish .impact-portrait-frame{height:170px}
+  .impact-portrait--exhibition .impact-portrait-frame{height:170px}
   .impact-portrait figcaption{font-family:'Inter',system-ui,sans-serif;font-size:13px;line-height:1.4;margin-top:12px}
 }
 @media(max-width:360px){
@@ -307,9 +311,9 @@ body.hero-active .topbar{justify-content:flex-end}
   .impact-heading .slide-title{font-size:31px}
   .impact-points li{font-size:18px;padding-left:24px}
   .impact-gallery{gap:6px}
-  .impact-portrait--sleepy-hollow .impact-portrait-frame{height:140px}
+  .impact-portrait--golden-lion .impact-portrait-frame{height:140px}
   .impact-portrait--jack .impact-portrait-frame{height:175px}
-  .impact-portrait--big-fish .impact-portrait-frame{height:150px}
+  .impact-portrait--exhibition .impact-portrait-frame{height:150px}
   .impact-portrait figcaption{font-size:12px;letter-spacing:-.025em}
 }
 
