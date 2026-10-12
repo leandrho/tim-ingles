@@ -71,7 +71,7 @@ let smoke = null;
 // An older cached HTML shell may be missing the canvas, stylesheet rules and smoke script.
 // Repair that shell without stopping navigation or leaving the snow visible on this slide.
 const stylesheet = document.querySelector('link[href*="css/style.css"]');
-const stylesheetAssetVersion = '20261012-impact-images-1';
+const stylesheetAssetVersion = '20261012-style-1';
 if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== stylesheetAssetVersion){
   stylesheet.href = 'css/style.css?v=' + stylesheetAssetVersion;
 }
@@ -237,6 +237,9 @@ function activate(i){
   } else if(id==='impact'){
     snow.setEmitting(false);
     snowCanvas.style.opacity='.28';
+  } else if(id==='style'){
+    snow.setEmitting(false);
+    snowCanvas.style.opacity='.18';
   } else {
     snow.setEmitting(false);
     snowCanvas.style.opacity='.52';

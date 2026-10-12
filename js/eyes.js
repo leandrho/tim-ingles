@@ -7,8 +7,8 @@
     element,
     eye: elements[i],
     open: elements[i].querySelector('.eye-socket').getAttribute('d'),
-    angry: element.dataset.angry,
-    closed: element.getAttribute('d'),
+    angry: element.dataset.angry || element.getAttribute('d'),
+    closed: element.dataset.closed || element.getAttribute('d'),
   }));
   const smile = eyes.querySelector('.spectral-smile');
   const curves = [...eyes.querySelectorAll('.smile-curve')].map(element => ({
@@ -17,9 +17,9 @@
   }));
   const stitches = [...eyes.querySelectorAll('.smile-stitch')];
   const face = [...elements, smile].filter(Boolean);
-  const cycleDuration = 13.2;
-  const expressionStart = 4.35;
-  const closingDuration = .55;
+  const cycleDuration = 14.8;
+  const expressionStart = 4.8;
+  const closingDuration = .75;
   const closingStart = cycleDuration - closingDuration;
 
   curves.forEach(curve => {
@@ -66,17 +66,18 @@
         return;
       }
 
-      blink = gsap.timeline({ delay: 15, repeat: -1, repeatDelay: 20 });
+      // Let the curtain and copy settle first, without a long empty first impression.
+      blink = gsap.timeline({ delay: 2.4, repeat: -1, repeatDelay: 22 });
       blink.set(elements, { autoAlpha: 1 }, 0);
       lids.forEach((lid, i) => {
         blink.to(lid.element, {
           attr: { d: lid.open },
-          duration: i ? .64 : .6,
+          duration: i ? .9 : .86,
           ease: 'sine.out',
         }, i ? .025 : 0);
         blink.to(lid.element, {
           attr: { d: lid.angry },
-          duration: i ? .75 : .72,
+          duration: i ? 1.05 : 1,
           ease: 'sine.inOut',
         }, expressionStart + (i ? .025 : 0));
         blink.to(lid.element, {
@@ -90,7 +91,7 @@
       curves.forEach(curve => {
         blink.to(curve.element, {
           strokeDashoffset: 0,
-          duration: .8,
+          duration: 1.1,
           ease: 'sine.out',
         }, expressionStart);
         blink.to(curve.element, {
@@ -117,7 +118,9 @@
     }
 
     const observer = new IntersectionObserver(entries => {
-      visible = entries[0].isIntersecting && entries[0].intersectionRatio >= .5;
+      const nextVisible = entries[0].isIntersecting && entries[0].intersectionRatio >= .5;
+      if (nextVisible === visible) return;
+      visible = nextVisible;
       update();
     }, { threshold: .5 });
     observer.observe(eyes);

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261012-impact-images-1" />
+  <link rel="stylesheet" href="css/style.css?v=20261012-style-1" />
 </head>
 <body class="hero-active">
   <!-- Progress bar -->
@@ -177,79 +177,80 @@
       </div>
     </section>
 
-    <section id="style" class="slide slide--contrast" data-index="4">
-      <img class="style-artwork" src="assets/images/contrasting-worlds.svg" alt="" aria-hidden="true" width="1600" height="900">
-      <div class="slide-inner">
-        <p class="kicker reveal center">Artistic style</p>
-        <h2 class="slide-title reveal center">Dark and <span class="vs">imaginative</span></h2>
-        <p class="slide-subtitle reveal center">His work is Gothic, strange, surreal and easy to recognize.</p>
-
-        <div class="contrast-wrap reveal">
-          <div class="contrast-card contrast-visual">
-            <div class="card-head">Appearance</div>
-            <ul>
-              <li>Pale faces and big eyes.</li>
-              <li>Unusual bodies and dark clothes.</li>
-              <li>Dark settings, unusual buildings and fantastic places.</li>
-            </ul>
+    <section id="style" class="slide slide--contrast" data-index="4" aria-labelledby="style-title">
+      <div class="style-bg" aria-hidden="true">
+        <img class="style-artwork" src="assets/images/contrasting-worlds.svg" alt="" loading="lazy" decoding="async" width="1600" height="900">
+        <div class="style-vignette"></div>
+      </div>
+      <div class="slide-inner style-inner">
+        <div class="style-intro">
+          <div class="style-heading">
+            <p class="kicker reveal">Artistic style</p>
+            <h2 id="style-title" class="slide-title reveal">Dark and<br><span class="accent">imaginative.</span></h2>
+            <p class="style-lede reveal">Gothic, strange and surreal.<br>A style that is easy to recognize.</p>
           </div>
-
-          <div class="contrast-divider" aria-hidden="true">
-            <div class="divider-line"></div>
-          </div>
-
-          <div class="contrast-card contrast-story">
-            <div class="card-head">Stories and feelings</div>
-            <ul>
-              <li>Dark stories can also be funny.</li>
-              <li>His characters have strong personalities and emotions.</li>
-              <li>Many characters feel different from society.</li>
-            </ul>
-          </div>
+          <ul class="style-traits reveal" role="list" aria-label="Characteristics of Tim Burton's artistic style">
+            <li>
+              <h3>Unusual characters</h3>
+              <p>Pale faces, big eyes, odd bodies and dark clothes.</p>
+            </li>
+            <li>
+              <h3>Gothic worlds</h3>
+              <p>Dark settings, strange buildings and fantastic places.</p>
+            </li>
+            <li>
+              <h3>Dark humor</h3>
+              <p>Dark stories can also be funny.</p>
+            </li>
+            <li>
+              <h3>Outsiders and emotions</h3>
+              <p>Strong feelings. Characters who feel different.</p>
+            </li>
+          </ul>
         </div>
-
-        <p class="contrast-foot reveal center">His unusual art shows that different ideas can be creative.</p>
-        <div class="fearful-eyes" aria-hidden="true">
-          <svg viewBox="0 0 520 310" focusable="false">
-            <defs>
-              <radialGradient id="spectral-eye" cx="52%" cy="52%" r="66%">
-                <stop offset="0" stop-color="#92999d" />
-                <stop offset=".6" stop-color="#e7e7e2" />
-                <stop offset="1" stop-color="#fff" />
-              </radialGradient>
-              <clipPath id="spectral-lid-left" clipPathUnits="userSpaceOnUse">
-                <path class="eye-lid" d="M26 94C56 113 99 130 129 129C168 128 205 112 226 97C205 112 168 128 129 129C99 130 56 113 26 94Z" data-angry="M28 77C61 45 98 60 129 78C163 90 191 102 221 113C217 141 171 173 129 169C76 169 28 150 28 77Z" />
-              </clipPath>
-              <clipPath id="spectral-lid-right" clipPathUnits="userSpaceOnUse">
-                <path class="eye-lid" d="M294 96C319 114 355 129 391 128C429 126 466 109 495 87C466 109 429 126 391 128C355 129 319 114 294 96Z" data-angry="M299 113C330 102 365 87 391 72C433 48 472 56 495 84C503 142 452 172 391 165C348 164 307 135 299 113Z" />
-              </clipPath>
-            </defs>
-            <g class="fearful-eye" clip-path="url(#spectral-lid-left)">
-              <path class="eye-socket" d="M26 94C22 25 77 9 129 27C175 37 209 57 226 97C217 138 171 173 129 169C76 169 28 150 26 94Z" />
-            </g>
-            <g class="fearful-eye" clip-path="url(#spectral-lid-right)">
-              <path class="eye-socket" d="M294 96C311 55 346 40 391 27C442 12 489 24 495 87C503 142 452 172 391 165C348 164 307 135 294 96Z" />
-            </g>
-            <g class="spectral-smile">
-              <path class="smile-curve" d="M260 266C194 277 106 249 48 195" />
-              <path class="smile-curve" d="M260 266C337 266 426 244 472 187" />
-              <path class="smile-stitch" d="M52.1 212.5Q56.8 204.4 65.4 196.3" />
-              <path class="smile-stitch" d="M74.5 232.8Q83.9 221.6 89.4 210.3" />
-              <path class="smile-stitch" d="M105.8 249.2Q109.2 238.4 116.6 227.7" />
-              <path class="smile-stitch" d="M137 265.4Q144 251.7 147 238.1" />
-              <path class="smile-stitch" d="M171 272Q171.6 261.3 176.1 250.6" />
-              <path class="smile-stitch" d="M203.4 280.3Q207 266.9 206.5 253.5" />
-              <path class="smile-stitch" d="M235.7 280.8Q233.4 268.3 235.1 255.8" />
-              <path class="smile-stitch" d="M259.5 253Q264 266 258 282" />
-              <path class="smile-stitch" d="M285 252.7Q283.8 265.2 286.6 277.7" />
-              <path class="smile-stitch" d="M317.5 250.8Q321.1 261.7 320.8 272.6" />
-              <path class="smile-stitch" d="M349 241.6Q350.3 255.2 355.6 268.8" />
-              <path class="smile-stitch" d="M380.4 234.7Q386.4 245.5 388.3 256.3" />
-              <path class="smile-stitch" d="M407.7 219.6Q412.4 232.5 421 245.3" />
-              <path class="smile-stitch" d="M434.1 205.7Q443.5 215.8 448.9 225.9" />
-              <path class="smile-stitch" d="M455.7 189.6Q461.3 196.9 470.8 204.2" />
-            </g>
-          </svg>
+        <div class="style-scene" aria-hidden="true">
+          <div class="fearful-eyes">
+            <svg viewBox="0 0 520 310" focusable="false">
+              <defs>
+                <radialGradient id="spectral-eye" cx="52%" cy="52%" r="66%">
+                  <stop offset="0" stop-color="#92999d" />
+                  <stop offset=".6" stop-color="#e7e7e2" />
+                  <stop offset="1" stop-color="#fff" />
+                </radialGradient>
+                <clipPath id="spectral-lid-left" clipPathUnits="userSpaceOnUse">
+                  <path class="eye-lid" d="M28 77C61 45 98 60 129 78C163 90 191 102 221 113C217 141 171 173 129 169C76 169 28 150 28 77Z" data-closed="M26 94C56 113 99 130 129 129C168 128 205 112 226 97C205 112 168 128 129 129C99 130 56 113 26 94Z" />
+                </clipPath>
+                <clipPath id="spectral-lid-right" clipPathUnits="userSpaceOnUse">
+                  <path class="eye-lid" d="M299 113C330 102 365 87 391 72C433 48 472 56 495 84C503 142 452 172 391 165C348 164 307 135 299 113Z" data-closed="M294 96C319 114 355 129 391 128C429 126 466 109 495 87C466 109 429 126 391 128C355 129 319 114 294 96Z" />
+                </clipPath>
+              </defs>
+              <g class="fearful-eye" clip-path="url(#spectral-lid-left)">
+                <path class="eye-socket" d="M26 94C22 25 77 9 129 27C175 37 209 57 226 97C217 138 171 173 129 169C76 169 28 150 26 94Z" />
+              </g>
+              <g class="fearful-eye" clip-path="url(#spectral-lid-right)">
+                <path class="eye-socket" d="M294 96C311 55 346 40 391 27C442 12 489 24 495 87C503 142 452 172 391 165C348 164 307 135 294 96Z" />
+              </g>
+              <g class="spectral-smile">
+                <path class="smile-curve" d="M260 266C194 277 106 249 48 195" />
+                <path class="smile-curve" d="M260 266C337 266 426 244 472 187" />
+                <path class="smile-stitch" d="M52.1 212.5Q56.8 204.4 65.4 196.3" />
+                <path class="smile-stitch" d="M74.5 232.8Q83.9 221.6 89.4 210.3" />
+                <path class="smile-stitch" d="M105.8 249.2Q109.2 238.4 116.6 227.7" />
+                <path class="smile-stitch" d="M137 265.4Q144 251.7 147 238.1" />
+                <path class="smile-stitch" d="M171 272Q171.6 261.3 176.1 250.6" />
+                <path class="smile-stitch" d="M203.4 280.3Q207 266.9 206.5 253.5" />
+                <path class="smile-stitch" d="M235.7 280.8Q233.4 268.3 235.1 255.8" />
+                <path class="smile-stitch" d="M259.5 253Q264 266 258 282" />
+                <path class="smile-stitch" d="M285 252.7Q283.8 265.2 286.6 277.7" />
+                <path class="smile-stitch" d="M317.5 250.8Q321.1 261.7 320.8 272.6" />
+                <path class="smile-stitch" d="M349 241.6Q350.3 255.2 355.6 268.8" />
+                <path class="smile-stitch" d="M380.4 234.7Q386.4 245.5 388.3 256.3" />
+                <path class="smile-stitch" d="M407.7 219.6Q412.4 232.5 421 245.3" />
+                <path class="smile-stitch" d="M434.1 205.7Q443.5 215.8 448.9 225.9" />
+                <path class="smile-stitch" d="M455.7 189.6Q461.3 196.9 470.8 204.2" />
+              </g>
+            </svg>
+          </div>
         </div>
       </div>
     </section>
@@ -411,7 +412,7 @@
   <script src="js/smoke.js?v=20261008-smoke-2"></script>
   <script src="js/closing-memory.js?v=20261010-memory-3"></script>
   <script src="js/slide-navigation.js?v=20261010-navigation-1"></script>
-  <script src="js/main.js?v=20261012-impact-images-1"></script>
-  <script src="js/eyes.js"></script>
+  <script src="js/main.js?v=20261012-style-1"></script>
+  <script src="js/eyes.js?v=20261012-style-1"></script>
 </body>
 </html>
