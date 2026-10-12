@@ -125,7 +125,7 @@ class ClosingMemory {
         this.title.classList.add('is-dismissed');
         this.title.setAttribute('aria-hidden', 'true');
       }, 10000);
-    }, 5000);
+    }, 12000);
   }
 
   shouldPlay() {

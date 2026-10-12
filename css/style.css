@@ -453,8 +453,8 @@ html.js .thanks-memory.is-ready .thanks-memory-poster{opacity:0}
 .thanks-ending{position:relative;z-index:4}
 .thanks-title{margin:0;color:var(--bone);font-family:'Cinzel Decorative',serif;font-size:clamp(42px,6.2vw,90px);line-height:1.15;text-shadow:0 4px 28px rgba(6,8,13,.85)}
 html.js .slide--thanks .thanks-title{opacity:0;visibility:hidden}
-html.js .slide--thanks .thanks-title.is-visible{opacity:1;visibility:visible;transition:opacity .8s ease,visibility 0s}
-html.js .slide--thanks .thanks-title.is-dismissed{opacity:0;visibility:hidden;transition:opacity .8s ease,visibility 0s linear .8s}
+html.js .slide--thanks .thanks-title.is-visible{opacity:1;visibility:visible;transition:opacity 3s ease,visibility 0s}
+html.js .slide--thanks .thanks-title.is-dismissed{opacity:0;visibility:hidden;transition:opacity 3s ease,visibility 0s linear 3s}
 .thanks-credits{position:absolute;z-index:4;bottom:28px;left:50%;translate:-50% 0;width:min(1120px,calc(100% - 128px));text-align:center;color:var(--bone);text-shadow:0 2px 12px rgba(6,8,13,.9)}
 .thanks-authors{font-size:22px;line-height:1.5;letter-spacing:.035em}
 .thanks-course{font-size:16px;line-height:1.5;letter-spacing:.08em;margin-top:5px}
