@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const source = fs.readFileSync(path.join(__dirname, '../js/opening-sequence.js'), 'utf8');
 
-function setup({reduced=false, gsap=false, videoFrames=false, smoke=false}={}) {
+function setup({reduced=false, gsap=false, videoFrames=false, smoke=false, duration=75, mediaDuration=75.034}={}) {
   const timers = new Map();
   const frames = new Map();
   const tweens = [];
@@ -64,7 +64,7 @@ function setup({reduced=false, gsap=false, videoFrames=false, smoke=false}={}) {
   const elements = {};
   for(const selector of ['.opening-video','.opening-film','.opening-title',
     '.opening-credit--agustina','.opening-credit--leandro',
-    '.opening-gate','#opening-start','#opening-skip','#opening-status']) {
+    '.opening-gate','#opening-label','#opening-start','#opening-skip','#opening-status']) {
     elements[selector] = new Element();
   }
   root.querySelector = selector => elements[selector] || null;
@@ -80,10 +80,10 @@ function setup({reduced=false, gsap=false, videoFrames=false, smoke=false}={}) {
     };
   }
   const video = elements['.opening-video'];
-  video.dataset = {src:'assets/video/this-is-halloween-opening.mp4',duration:'60'};
+  video.dataset = {src:'assets/video/this-is-halloween-opening.mp4',duration:String(duration)};
   video.paused = true;
   video.currentTime = 0;
-  video.duration = 60.018;
+  video.duration = mediaDuration;
   video.playCalls = 0;
   video.loadCalls = 0;
   video.play = () => {
@@ -220,7 +220,7 @@ test('each presenter fades in and out separately after the title, with no overla
   app.time(50);
   assert.equal(leandro.style.opacity,0);
   assert.equal(leandro.getAttribute('aria-hidden'),'true');
-  app.time(58.5);
+  app.time(73.5);
   assert.equal(app.root.style.opacity,.5);
   assert.equal(agustina.style.opacity,0);
   assert.equal(leandro.style.opacity,0);
@@ -234,7 +234,7 @@ test('the GSAP timeline is paused and follows the media clock, not wall-clock ti
   assert.equal(app.timelines[0].options.paused,true);
   assert.equal(app.timelines[0].clock,14);
   assert.equal(app.timelines[0].steps.length,9);
-  assert.deepEqual(app.timelines[0].steps.map(step=>step.at(-1)),[0,10,19,25,33,39,47,56,57]);
+  assert.deepEqual(app.timelines[0].steps.map(step=>step.at(-1)),[0,10,19,25,33,39,47,71,72]);
   assert.equal(app.timelines[0].steps[3][1],app.elements['.opening-credit--agustina']);
   assert.equal(app.timelines[0].steps[5][1],app.elements['.opening-credit--leandro']);
   app.video.pause();
@@ -269,10 +269,10 @@ test('Skip before Start restores previous inert states without loading the film'
   assert.equal(app.document.body.classList.contains('opening-active'),false);
 });
 
-test('at 60 seconds the film stops, all listeners clean up, and completion happens once', ()=>{
+test('at 75 seconds the film stops, all listeners clean up, and completion happens once', ()=>{
   const app = setup();
   app.start();
-  app.time(60);
+  app.time(75);
   app.video.emit('ended');
   app.opening.finish();
   assert.equal(app.finishes,1);
@@ -325,6 +325,8 @@ test('media failures show Retry and Skip instead of advancing or leaving a blank
   assert.equal(app.opening.state,'error');
   assert.equal(app.elements['.opening-gate'].hidden,false);
   assert.equal(app.elements['#opening-start'].textContent,'Retry');
+  assert.equal(app.elements['#opening-skip'].hidden,false);
+  assert.equal(app.elements['#opening-skip'].style.opacity,undefined);
   assert.equal(app.root.style.opacity,undefined);
   assert.equal(app.elements['.opening-credit--agustina'].style.opacity,undefined);
   assert.equal(app.elements['.opening-credit--agustina'].getAttribute('aria-hidden'),'true');
@@ -420,7 +422,7 @@ test('video Pause freezes the mist in place; finishing the intro stops it', ()=>
   app.opening.play();
   app.video.emit('playing');
   assert.equal(app.opening.smoke.paused,false);
-  app.time(60);
+  app.time(75);
   assert.equal(app.opening.smoke.active,false);
 });
 
@@ -435,8 +437,94 @@ test('reduced motion keeps the opening mist static until entering the presentati
 test('a playing event at the end cannot reactivate the completed opening mist', ()=>{
   const app = setup({smoke:true});
   app.elements['#opening-start'].emit('click');
-  app.video.currentTime=60;
+  app.video.currentTime=75;
   app.video.emit('playing');
   assert.equal(app.opening.active,false);
   assert.equal(app.opening.smoke.active,false);
+});
+
+test('the extended intro stays fully visible at sixty seconds and fades only near seventy-five', ()=>{
+  const app = setup();
+  app.start();
+  app.time(60);
+  assert.equal(app.opening.active,true);
+  assert.equal(app.finishes,0);
+  assert.equal(app.root.style.opacity,1);
+  assert.equal(app.elements['.opening-film'].style.opacity,1);
+  app.time(71);
+  assert.equal(app.elements['.opening-film'].style.opacity,1);
+  app.time(73.5);
+  assert.equal(app.root.style.opacity,.5);
+  assert.equal(app.elements['.opening-film'].style.opacity,.375);
+  assert.equal(app.finishes,0);
+  app.time(75);
+  assert.equal(app.finishes,1);
+});
+
+test('fade timing follows actual media duration if a shorter clip is served', ()=>{
+  const app = setup({gsap:true,mediaDuration:60.018});
+  app.start();
+  assert.deepEqual(app.timelines[0].steps.slice(-2).map(step=>step.at(-1)),[56.018,57.018]);
+  app.time(60.018);
+  assert.equal(app.finishes,1);
+});
+
+test('Skip intro remains available while idle or waiting for the film to load', ()=>{
+  const app = setup();
+  assert.equal(app.elements['#opening-skip'].hidden,false);
+  app.elements['#opening-start'].emit('click');
+  assert.equal(app.opening.state,'loading');
+  assert.equal(app.elements['#opening-skip'].hidden,false);
+});
+
+test('Skip intro fades away at seven playback seconds and transfers focus off the hidden button', ()=>{
+  const app = setup();
+  app.start();
+  app.time(6.4);
+  assert.equal(app.elements['#opening-skip'].hidden,false);
+  assert.ok(Math.abs(app.elements['#opening-skip'].style.opacity-1)<.001);
+  app.time(6.7);
+  assert.ok(Math.abs(app.elements['#opening-skip'].style.opacity-.5)<.001);
+  app.time(7);
+  assert.equal(app.elements['#opening-skip'].hidden,true);
+  assert.equal(app.elements['#opening-skip'].style.opacity,0);
+  assert.equal(app.document.activeElement,app.elements['#opening-label']);
+  assert.equal(app.opening.active,true);
+});
+
+test('pausing or hiding the tab never consumes the remaining visible Skip time', ()=>{
+  const app = setup();
+  app.start();
+  app.time(6);
+  app.hide();
+  assert.equal(app.elements['#opening-skip'].hidden,false);
+  app.show();
+  app.video.emit('playing');
+  assert.equal(app.video.currentTime,6);
+  assert.equal(app.elements['#opening-skip'].hidden,false);
+  app.time(7);
+  assert.equal(app.elements['#opening-skip'].hidden,true);
+});
+
+test('Tab remains safe and Escape still skips after all visible controls disappear', ()=>{
+  const app = setup();
+  app.start();
+  app.time(8);
+  assert.equal(app.root.emit('keydown',{key:'Tab'}).defaultPrevented,true);
+  assert.equal(app.document.activeElement,app.elements['#opening-label']);
+  assert.equal(app.root.emit('keydown',{key:'Tab',shiftKey:true}).defaultPrevented,true);
+  assert.equal(app.root.emit('keydown',{key:'Escape'}).defaultPrevented,true);
+  assert.equal(app.finishes,1);
+});
+
+test('Escape and Tab still work if a pointer interaction moves focus outside the film', ()=>{
+  const app = setup();
+  app.start();
+  app.document.body.focus();
+  app.time(8);
+  assert.equal(app.document.emit('keydown',{key:'Tab'}).defaultPrevented,true);
+  assert.equal(app.document.activeElement,app.elements['#opening-label']);
+  app.document.body.focus();
+  assert.equal(app.document.emit('keydown',{key:'Escape'}).defaultPrevented,true);
+  assert.equal(app.finishes,1);
 });

@@ -138,6 +138,7 @@ const closingMemory = thanksVideo && window.ClosingMemory
   : null;
 
 // Audio synth fallback (celesta-like)
+const themeVolume = .5;
 let audioCtx, gainNode, isSynthPlaying=false;
 function initSynth(){
   try{
@@ -203,6 +204,9 @@ function setAudio(on, immediate=false){
   if(on) closingMemory?.setMuted(true);
   updateAudioButton(on);
   if(on){
+    // Apply immediately before playback, including resumes and autoplay retries.
+    audio.volume = themeVolume;
+    audio.muted = false;
     if(audio.src && audio.src!==location.href){
       audio.play().catch(error=>{
         if(request!==audioRequest || !audioOn || closingMemory?.active || error.name==='AbortError') return;
@@ -226,7 +230,7 @@ audioBtn.addEventListener('click', ()=>{
   if(closingMemory?.active) closingMemory.setMuted(!thanksVideo.muted);
   else setAudio(!audioOn);
 });
-audio.volume = .5;
+audio.volume = themeVolume;
 
 // Start with the uncovered hero, not with the prologue or the delayed snowfall.
 // Refreshes must not restart playback or undo the user's music toggle.

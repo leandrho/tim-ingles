@@ -84,7 +84,7 @@ function setup({opening=true, hidden=false, hash=''}={}) {
   const audio=Object.assign(new Element(),{
     src:'http://localhost/assets/audio/theme.mp3', paused:true, currentTime:0, playCalls:[],
     play(){
-      this.playCalls.push({volume:this.volume});
+      this.playCalls.push({volume:this.volume,muted:this.muted});
       if(this.nextError){
         const error=this.nextError;
         this.nextError=null;
@@ -151,7 +151,7 @@ test('theme stays silent throughout the intro, including repeated hero activatio
   const app=setup();
   app.opening.start();
   app.activate(0);
-  app.tick(60000);
+  app.tick(75000);
   assert.equal(app.audio.volume,.5);
   assert.equal(app.audio.playCalls.length,0);
   assert.equal(app.audio.paused,true);
@@ -165,6 +165,21 @@ test('theme starts at fifty percent when the intro hands off to the hero, before
   assert.equal(app.audio.paused,false);
   assert.equal(app.snow.active,false);
   assert.equal(app.audioBtn.attributes.get('aria-pressed'),'true');
+});
+
+test('the theme resets to fifty percent and unmutes immediately before each start', ()=>{
+  const app=setup();
+  app.audio.volume=.18;
+  app.audio.muted=true;
+  app.opening.finish();
+  assert.equal(app.audio.playCalls[0].volume,.5);
+  assert.equal(app.audio.playCalls[0].muted,false);
+  app.audioBtn.emit('click');
+  app.audio.volume=.9;
+  app.audio.muted=true;
+  app.audioBtn.emit('click');
+  assert.equal(app.audio.playCalls[1].volume,.5);
+  assert.equal(app.audio.playCalls[1].muted,false);
 });
 
 test('refreshes never restart the song or override a manual music toggle', ()=>{

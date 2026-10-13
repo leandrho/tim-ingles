@@ -9,3 +9,12 @@
 - The film starts with sound after normal presentation navigation. If the browser blocks unmuted autoplay on a cold deep link, it starts silently and enables sound on the next user interaction. The existing top-bar sound button controls the film on this slide, never the theme audio.
 - The "Thank You!" title appears five seconds after entering, stays visible for ten seconds, then fades out. The sequence resets on each visit.
 - Reduced-motion preferences show the still image instead of autoplaying and disable the title's fade transition.
+
+## Opening prologue
+
+- Original provided video: `this_is_halloween.mp4` (unchanged).
+- Browser-compatible excerpt: `this-is-halloween-opening.mp4`, the first **75 seconds**, with H.264 video, AAC audio and a fast-start MP4 container.
+- Audio fades from **1:11 to 1:15**; the film and landscape fade before handing off to the first slide.
+- The title and each presenter's centered credit retain their original timing.
+- Skip intro fades away at **seven seconds of actual playback**. Escape remains available; a media failure restores Retry and Skip intro.
+- The presentation theme begins on the first slide at **50% media volume**, independently of the opening film.

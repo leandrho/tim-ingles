@@ -12,22 +12,22 @@
   <link rel="stylesheet" href="css/style.css?v=20261012-credits-1" />
 </head>
 <body class="hero-active">
-  <!-- A one-minute prologue, separate from the nine presentation slides. -->
+  <!-- A 75-second prologue, separate from the nine presentation slides. -->
   <section id="opening" class="opening" role="dialog" aria-modal="true" aria-labelledby="opening-label" aria-describedby="opening-description" hidden>
-    <h2 id="opening-label" class="sr-only">Opening film</h2>
+    <h2 id="opening-label" class="sr-only" tabindex="-1">Opening film</h2>
     <img class="opening-artwork" src="assets/images/halloween-intro-bg.webp" alt="" aria-hidden="true" decoding="async" width="1920" height="1080">
     <div class="opening-vignette" aria-hidden="true"></div>
     <div class="opening-film">
       <div class="opening-film-surface">
         <img class="opening-poster" src="assets/images/halloween-opening.webp" alt="" aria-hidden="true" decoding="async" fetchpriority="high" width="1280" height="720">
-        <video id="opening-video" class="opening-video" data-src="assets/video/this-is-halloween-opening.mp4" data-duration="60" poster="assets/images/halloween-opening.webp" preload="none" muted playsinline disablepictureinpicture disableremoteplayback width="1280" height="720" aria-label="This Is Halloween opening film" aria-describedby="opening-description">
-          <track kind="captions" src="assets/video/this-is-halloween-opening.vtt" srclang="en" label="English music captions">
+        <video id="opening-video" class="opening-video" data-src="assets/video/this-is-halloween-opening.mp4?v=20261012-opening-75-1" data-duration="75" poster="assets/images/halloween-opening.webp" preload="none" muted playsinline disablepictureinpicture disableremoteplayback width="1280" height="720" aria-label="This Is Halloween opening film" aria-describedby="opening-description">
+          <track kind="captions" src="assets/video/this-is-halloween-opening.vtt?v=20261012-opening-75-1" srclang="en" label="English music captions">
           Your browser does not support video playback.
         </video>
       </div>
     </div>
     <canvas id="opening-smoke" class="opening-smoke" aria-hidden="true"></canvas>
-    <p id="opening-description" class="sr-only">A one-minute musical opening from The Nightmare Before Christmas, with the title Tim Burton and the presenters' names. The presentation begins when the film ends. You can skip the opening at any time.</p>
+    <p id="opening-description" class="sr-only">A 75-second musical opening from The Nightmare Before Christmas, with the title Tim Burton and the presenters' names. The presentation begins when the film ends. The Skip intro button is available during the first seven seconds. Press Escape to skip at any time.</p>
     <p class="opening-title" aria-hidden="true">TIM BURTON</p>
     <div class="opening-gate">
       <button id="opening-start" class="opening-start" type="button">START</button>
@@ -439,9 +439,9 @@
   <script src="js/snow.js?v=20261012-top-snow-1"></script>
   <script src="js/smoke.js?v=20261012-smoke-1"></script>
   <script src="js/closing-memory.js?v=20261010-memory-3"></script>
-  <script src="js/opening-sequence.js?v=20261012-credits-1"></script>
+  <script src="js/opening-sequence.js?v=20261012-opening-75-1"></script>
   <script src="js/slide-navigation.js?v=20261010-navigation-1"></script>
-  <script src="js/main.js?v=20261012-credits-1"></script>
+  <script src="js/main.js?v=20261012-opening-75-1"></script>
   <script src="js/eyes.js?v=20261012-style-1"></script>
 </body>
 </html>

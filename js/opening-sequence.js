@@ -3,6 +3,7 @@
 class OpeningSequence {
   constructor(root, {onStart, onFinish} = {}) {
     this.root = root;
+    this.label = root.querySelector('#opening-label');
     this.video = root.querySelector('.opening-video');
     this.film = root.querySelector('.opening-film');
     this.title = root.querySelector('.opening-title');
@@ -14,7 +15,7 @@ class OpeningSequence {
     this.status = root.querySelector('#opening-status');
     this.onStart = onStart;
     this.onFinish = onFinish;
-    this.duration = Number(this.video.dataset.duration) || 60;
+    this.duration = Number(this.video.dataset.duration) || 75;
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     this.active = true;
     this.state = 'waiting';
@@ -51,8 +52,13 @@ class OpeningSequence {
     });
     this.listen(this.skipButton, 'click', () => this.finish());
     this.listen(root, 'keydown', event => this.onKeyDown(event));
+    this.listen(document, 'keydown', event => {
+      // Pointer interactions can move focus outside the film; Escape must still work.
+      if(!event.defaultPrevented) this.onKeyDown(event);
+    });
     this.listen(this.video, 'playing', () => {
       if(!this.active || this.state==='finishing') return;
+      const moveFocus = !this.gate.hidden || document.activeElement===this.startButton;
       clearTimeout(this.loadingTimer);
       this.state = 'playing';
       this.gate.hidden = true;
@@ -68,7 +74,9 @@ class OpeningSequence {
         this.scheduleFrame();
       }
       // Don't strand keyboard focus on the now-hidden Start button.
-      if(document.activeElement===this.startButton) this.skipButton.focus({preventScroll:true});
+      if(moveFocus) {
+        (this.skipButton.hidden ? this.label : this.skipButton).focus({preventScroll:true});
+      }
     });
     this.listen(this.video, 'pause', () => {
       if(!this.active || !['playing','loading'].includes(this.state)) return;
@@ -105,6 +113,8 @@ class OpeningSequence {
     this.credits.forEach(credit => credit.setAttribute('aria-hidden', String(!reduced)));
     this.startButton.textContent = reduced ? 'Start presentation' : 'START';
     this.status.textContent = '';
+    this.skipButton.hidden = false;
+    this.skipButton.style.removeProperty('opacity');
     this.smoke?.setPaused?.(reduced);
     this.smoke?.setActive(true);
   }
@@ -139,6 +149,7 @@ class OpeningSequence {
 
   createTimeline() {
     if(!window.gsap) return null;
+    const end = Math.min(this.duration, this.video.duration || this.duration);
     const timeline = window.gsap.timeline({paused:true})
       .fromTo(this.film, {autoAlpha:0}, {autoAlpha:1,duration:2,ease:'power1.inOut'}, 0)
       .fromTo(this.title, {autoAlpha:0}, {autoAlpha:1,duration:3,ease:'power1.inOut'}, 10)
@@ -150,13 +161,14 @@ class OpeningSequence {
         .to(credit, {autoAlpha:0,duration:3,ease:'power1.inOut'}, end-3);
     });
     return timeline
-      .to(this.film, {autoAlpha:0,duration:4,ease:'power1.inOut'}, 56)
-      .to(this.root, {opacity:0,duration:3,ease:'power1.inOut'}, 57);
+      .to(this.film, {autoAlpha:0,duration:4,ease:'power1.inOut'}, Math.max(0,end-4))
+      .to(this.root, {opacity:0,duration:3,ease:'power1.inOut'}, Math.max(0,end-3));
   }
 
   syncTime() {
     if(!this.active || !['playing','paused'].includes(this.state)) return;
     const time = this.video.currentTime;
+    const end = Math.min(this.duration, this.video.duration || this.duration);
     if(this.timeline) this.timeline.time(time, true);
     else {
       // Native fallback keeps the same choreography if GSAP can't load.
@@ -165,20 +177,23 @@ class OpeningSequence {
         element.style.opacity = opacity;
         element.style.visibility = opacity > 0 ? 'visible' : 'hidden';
       };
-      fade(this.film, clamp(time / 2) * clamp((60 - time) / 4));
+      fade(this.film, clamp(time / 2) * clamp((end - time) / 4));
       fade(this.title, clamp((time - 10) / 3) * clamp((22 - time) / 3));
       this.credits.forEach((credit,index) => {
         const [start,end] = this.creditWindows[index];
         fade(credit, clamp((time-start) / 3) * clamp((end-time) / 3));
       });
-      this.root.style.opacity = clamp((60 - time) / 3);
+      this.root.style.opacity = clamp((end - time) / 3);
     }
     this.title.setAttribute('aria-hidden', String(time<=10 || time>=22));
     this.credits.forEach((credit,index) => {
       const [start,end] = this.creditWindows[index];
       credit.setAttribute('aria-hidden', String(time<=start || time>=end));
     });
-    const end = Math.min(this.duration, this.video.duration || this.duration);
+    // Hide at seven seconds of media time; idle time, buffering and hidden tabs do not count.
+    if(time>=7 && document.activeElement===this.skipButton) this.label.focus({preventScroll:true});
+    this.skipButton.hidden = time>=7;
+    this.skipButton.style.opacity = Math.min(1, Math.max(0, (7-time) / .6));
     if(time>=end) this.finish({immediate:true});
   }
 
@@ -239,6 +254,11 @@ class OpeningSequence {
     } else if(event.key==='Tab') {
       const buttons = [this.startButton,this.skipButton]
         .filter(button => !button.hidden && !button.disabled);
+      if(!buttons.length) {
+        event.preventDefault();
+        this.label.focus({preventScroll:true});
+        return;
+      }
       const first = buttons[0];
       const last = buttons[buttons.length - 1];
       if(event.shiftKey && document.activeElement===first) {
