@@ -139,4 +139,26 @@ test('presentation fits projector viewports and stays aligned after resizing', {
   await page.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
   assert.equal(await page.locator('#thanks-video').evaluate(video=>video.loop),false);
   assert.equal(await page.locator('.thanks-title').getAttribute('aria-hidden'),null);
+
+  // Check the rendered eyelids at each blink, before the stitched grin is drawn.
+  await page.goto(`http://127.0.0.1:${server.address().port}/?eye-check=1#style`);
+  await page.waitForFunction(()=>gsap.getTweensOf(document.querySelector('.eye-lid')).length>0);
+  const expression=await page.evaluate(()=>{
+    const lids=[...document.querySelectorAll('.eye-lid')];
+    const smile=document.querySelector('.spectral-smile');
+    const timeline=gsap.getTweensOf(lids[0])[0].parent;
+    timeline.pause();
+    const blinks=[1.67,3.85,6.03].map(time=>{
+      timeline.time(time);
+      return {closed:lids.every(lid=>lid.getAttribute('d')===lid.dataset.closed),smileHidden:getComputedStyle(smile).visibility==='hidden'};
+    });
+    timeline.time(6.6);
+    const openBeforeSmile=lids.every(lid=>lid.getAttribute('d')===document.querySelectorAll('.eye-socket')[lids.indexOf(lid)].getAttribute('d'))
+      && getComputedStyle(smile).visibility==='hidden';
+    timeline.time(8.5);
+    return {blinks,openBeforeSmile,smileVisible:getComputedStyle(smile).visibility!=='hidden'};
+  });
+  assert.deepEqual(expression.blinks,Array.from({length:3},()=>({closed:true,smileHidden:true})));
+  assert.equal(expression.openBeforeSmile,true);
+  assert.equal(expression.smileVisible,true);
 });

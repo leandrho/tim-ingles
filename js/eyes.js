@@ -17,8 +17,15 @@
   }));
   const stitches = [...eyes.querySelectorAll('.smile-stitch')];
   const face = [...elements, smile].filter(Boolean);
-  const cycleDuration = 14.8;
-  const expressionStart = 4.8;
+  const blinkCount = 3;
+  const firstBlink = 1.4;
+  const blinkCloseDuration = .22;
+  const blinkHoldDuration = .1;
+  const blinkOpenDuration = .36;
+  const blinkDuration = blinkCloseDuration + blinkHoldDuration + blinkOpenDuration;
+  const blinkInterval = blinkDuration + 1.5;
+  const expressionStart = firstBlink + (blinkCount - 1) * blinkInterval + blinkDuration + .78;
+  const cycleDuration = expressionStart + 10;
   const closingDuration = .75;
   const closingStart = cycleDuration - closingDuration;
 
@@ -75,6 +82,20 @@
           duration: i ? .9 : .86,
           ease: 'sine.out',
         }, i ? .025 : 0);
+        // Leave 1.5 seconds with the eyes open between each complete blink.
+        for(let count = 0; count < blinkCount; count++) {
+          const start = firstBlink + count * blinkInterval + (i ? .025 : 0);
+          blink.to(lid.element, {
+            attr: { d: lid.closed },
+            duration: blinkCloseDuration,
+            ease: 'sine.in',
+          }, start);
+          blink.to(lid.element, {
+            attr: { d: lid.open },
+            duration: blinkOpenDuration,
+            ease: 'sine.out',
+          }, start + blinkCloseDuration + blinkHoldDuration);
+        }
         blink.to(lid.element, {
           attr: { d: lid.angry },
           duration: i ? 1.05 : 1,

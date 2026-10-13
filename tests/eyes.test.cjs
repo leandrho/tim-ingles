@@ -111,7 +111,7 @@ test('the first appearance is early, with a slow expression and a long quiet int
   const opening=timeline.steps.find(step=>step.vars.attr?.d==='open-0');
   assert.equal(opening.vars.duration,.86);
   const smile=timeline.steps.find(step=>step.target===app.curves[0] && step.vars.strokeDashoffset===0);
-  assert.equal(smile.position,4.8);
+  assert.ok(Math.abs(smile.position-7.22)<1e-6);
   assert.equal(smile.vars.duration,1.1);
 });
 
@@ -122,6 +122,36 @@ test('visibility reports within the same threshold do not restart the expression
   app.intersect(1);
   assert.equal(app.timelines.length,1);
   assert.equal(app.timelines[0].killed,false);
+});
+
+test('both eyes blink exactly three times before the macabre grin appears', ()=>{
+  const app=setup();
+  app.intersect(.8);
+  const timeline=app.timelines[0];
+  const grin=timeline.steps.find(step=>step.target===app.smile && step.vars.autoAlpha===1);
+  app.lids.forEach((lid,index)=>{
+    const eyelidSteps=timeline.steps.filter(step=>step.target===lid && step.vars.attr);
+    const closings=eyelidSteps.filter(step=>step.vars.attr.d===`closed-${index}` && step.position<grin.position);
+    const openings=eyelidSteps.filter(step=>step.vars.attr.d===`open-${index}` && step.position>0.1);
+    assert.equal(closings.length,3);
+    assert.equal(openings.length,3);
+    closings.forEach((closing,count)=>{
+      assert.equal(closing.vars.duration,.22);
+      assert.equal(openings[count].vars.duration,.36);
+      const hold=openings[count].position-(closing.position+closing.vars.duration);
+      assert.ok(Math.abs(hold-.1)<1e-6);
+      assert.ok(openings[count].position+openings[count].vars.duration<grin.position);
+      if(count<2) {
+        const gap=closings[count+1].position-(openings[count].position+openings[count].vars.duration);
+        assert.ok(Math.abs(gap-1.5)<1e-6, `Expected a 1.5s pause, got ${gap}`);
+      }
+    });
+    const expression=eyelidSteps.find(step=>step.vars.attr.d===`angry-${index}`);
+    assert.ok(expression.position>=grin.position);
+  });
+  assert.equal(timeline.options.repeat,-1);
+  const end=timeline.steps.at(-1);
+  assert.ok(Math.abs(end.position-(grin.position+10))<1e-6);
 });
 
 test('leaving the scene stops playback and re-entry starts with closed eyelids', ()=>{
