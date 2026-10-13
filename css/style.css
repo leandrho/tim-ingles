@@ -603,6 +603,43 @@ html.js .reveal.is-visible{opacity:1;transform:none}
 html.js .reveal.no-anim{opacity:1;transform:none}
 
 /* responsive */
+/* Projector / laptop layouts: fit the content, not just a clipped slide.
+   Keep readable type and reserve the header, navigation and edge clearance. */
+@media(min-width:901px){
+  html{scrollbar-width:none}
+  html::-webkit-scrollbar{display:none}
+  .slide{min-height:100dvh;padding:80px 0 32px}
+  .slide--hero{padding:0}
+  .slide-inner{max-width:calc(100% - 128px)}
+  .film-card img{height:clamp(104px,16dvh,180px)}
+  .film-year{opacity:.7}
+  .tim-sketch-gallery{width:calc(100% - 24px);margin-right:12px}
+  .style-scene{max-height:calc(100dvh - 112px)}
+  .slide.slide--thanks{padding:80px 0 128px}
+  .thanks-memory{width:min(100%,980px,calc((100dvh - 320px) * 16 / 9))}
+}
+/* Browser chrome can leave a 720p laptop with only about 600px of height. */
+@media(min-width:901px) and (max-height:680px){
+  .slide{padding-top:72px;padding-bottom:28px}
+  .slide--hero{padding:0}
+  .tim-photo-wrap img{height:300px}
+  .tim-sketch-gallery{height:calc(100dvh - 140px)}
+  .slide--films .slide-title{font-size:45px}
+  .film-card img{height:12dvh}
+  .film-card-body{padding:8px 12px 10px}
+  .style-intro .slide-title{font-size:40px}
+  .style-lede{margin-bottom:16px}
+  .style-traits{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .style-scene{max-height:calc(100dvh - 100px)}
+  .impact-heading{margin-bottom:20px}
+  .impact-gallery{padding-top:10px;padding-bottom:8px}
+  .impact-portrait--golden-lion .impact-portrait-frame{height:30dvh}
+  .impact-portrait--jack .impact-portrait-frame{height:36dvh}
+  .impact-portrait--exhibition .impact-portrait-frame{height:31dvh}
+  .legacy-inner{gap:14px}
+  .legacy-heading .slide-title{font-size:40px}
+  .legacy-scene{width:min(100%,700px,60dvh)}
+}
 @media(max-width:900px){
   .grid-2{grid-template-columns:1fr;gap:28px}
   .edward-card{margin:0 auto}

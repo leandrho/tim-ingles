@@ -13,10 +13,14 @@ function setup({heights=[600,600,600], current=0}={}) {
   const body = {};
   const target = {closest:()=>null, parentElement:body, scrollHeight:0, clientHeight:0};
   const listeners = new Map();
+  const frames = new Map();
+  let frameId = 0;
   const window = {
     innerHeight:600,
     scrollY:heights.slice(0,current).reduce((sum,height)=>sum+height,0),
     addEventListener(name, callback) { listeners.set(name,callback); },
+    requestAnimationFrame(callback) { frames.set(++frameId, callback); return frameId; },
+    cancelAnimationFrame(id) { frames.delete(id); },
     scrollTo({top}) { this.scrollY = top; },
   };
   const slides = heights.map((height,index)=>({
@@ -55,6 +59,16 @@ function setup({heights=[600,600,600], current=0}={}) {
     navigation, window, calls,
     tick:milliseconds=>{ now+=milliseconds; },
     lock:value=>{ transitioning=value; },
+    resize(newHeights, viewportHeight) {
+      heights.splice(0, heights.length, ...newHeights);
+      window.innerHeight = viewportHeight;
+      listeners.get('resize')();
+    },
+    flushResize() {
+      const pending = [...frames.values()];
+      frames.clear();
+      pending.forEach(callback=>callback());
+    },
     wheel(deltaY, overrides={}) {
       const input=event({deltaY,deltaX:0,deltaMode:0,...overrides});
       listeners.get('wheel')(input);
@@ -224,4 +238,25 @@ test('first/last boundaries do not run redundant navigation', ()=>{
   last.key('ArrowRight');
   last.wheel(100);
   assert.equal(last.calls.length,0);
+});
+
+test('fullscreen resize keeps the current slide aligned at its new boundary', ()=>{
+  const app=setup({current:2});
+  app.resize([720,720,720],720);
+  app.flushResize();
+  assert.equal(app.window.scrollY,1440);
+  assert.equal(app.calls.length,0);
+  app.resize([600,600,600],600);
+  app.flushResize();
+  assert.equal(app.window.scrollY,1200);
+});
+
+test('consecutive resolution changes coalesce without starting transitions', ()=>{
+  const app=setup({current:1});
+  app.lock(true);
+  app.resize([720,720,720],720);
+  app.resize([1080,1080,1080],1080);
+  app.flushResize();
+  assert.equal(app.window.scrollY,1080);
+  assert.equal(app.calls.length,0);
 });

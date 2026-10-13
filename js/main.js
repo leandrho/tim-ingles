@@ -99,7 +99,7 @@ let smoke = null;
 // An older cached HTML shell may be missing the canvas, stylesheet rules and smoke script.
 // Repair that shell without stopping navigation or leaving the snow visible on this slide.
 const stylesheet = document.querySelector('link[href*="css/style.css"]');
-const stylesheetAssetVersion = '20261012-credits-1';
+const stylesheetAssetVersion = '20261013-projector-1';
 if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== stylesheetAssetVersion){
   stylesheet.href = 'css/style.css?v=' + stylesheetAssetVersion;
 }
@@ -396,6 +396,10 @@ function initSlideNavigation(){
     getCurrentIndex:currentSlideIndex,
     navigate:go,
     isTransitioning:()=>transitionInProgress || Boolean(openingSequence?.active),
+    onBeforeRealign:index=>{
+      if(hasGSAP) ScrollTrigger.refresh();
+      activate(index);
+    },
   });
 }
 if(window.SlideNavigation){
@@ -403,7 +407,7 @@ if(window.SlideNavigation){
 } else {
   // An older cached HTML shell may not include the new input controller yet.
   const script = document.createElement('script');
-  script.src = 'js/slide-navigation.js?v=20261010-navigation-1';
+  script.src = 'js/slide-navigation.js?v=20261013-projector-1';
   script.onload = initSlideNavigation;
   document.body.appendChild(script);
 }

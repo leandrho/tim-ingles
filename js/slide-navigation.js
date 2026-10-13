@@ -3,24 +3,45 @@
 const editableSelector = 'input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]';
 
 class SlideNavigation {
-  constructor({slides, getCurrentIndex, navigate, isTransitioning}) {
+  constructor({slides, getCurrentIndex, navigate, isTransitioning, onBeforeRealign=()=>{}}) {
     this.slides = slides;
     this.getCurrentIndex = getCurrentIndex;
     this.navigate = navigate;
     this.isTransitioning = isTransitioning;
+    this.onBeforeRealign = onBeforeRealign;
     this.wheelDistance = 0;
     this.lastWheelTime = 0;
     this.wheelConsumed = false;
     this.wheelReading = false;
     this.touch = null;
+    this.resizeFrame = null;
+    this.resizeIndex = null;
 
     window.addEventListener('wheel', event => this.onWheel(event), {passive:false});
     window.addEventListener('keydown', event => this.onKeyDown(event));
+    window.addEventListener('resize', () => this.onResize());
     window.addEventListener('touchstart', event => this.onTouchStart(event), {passive:true});
     window.addEventListener('touchmove', event => this.onTouchMove(event), {passive:false});
     for(const event of ['touchend', 'touchcancel']) {
       window.addEventListener(event, () => { this.touch = null; }, {passive:true});
     }
+  }
+
+  onResize() {
+    // Fullscreen and a projector resolution change move every slide boundary.
+    // Capture the active slide before scroll observers react to the new layout.
+    if(this.resizeIndex === null) this.resizeIndex = this.getCurrentIndex();
+    if(this.resizeFrame !== null) window.cancelAnimationFrame(this.resizeFrame);
+    this.resizeFrame = window.requestAnimationFrame(() => {
+      const index = this.resizeIndex;
+      const slide = this.slides[index];
+      this.resizeFrame = null;
+      this.resizeIndex = null;
+      if(!slide) return;
+      this.onBeforeRealign(index);
+      const rect = slide.getBoundingClientRect();
+      window.scrollTo({top:rect.top + window.scrollY, behavior:'instant'});
+    });
   }
 
   isEditable(target) {
