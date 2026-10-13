@@ -1,10 +1,12 @@
 // Layered, advected mist. The artwork itself masks foreground silhouettes and warm lights.
 (() => {
 class SmokeSystem {
-  constructor(canvas, artwork) {
+  constructor(canvas, artwork, {profile='closing'} = {}) {
     this.canvas = canvas;
     this.artwork = artwork;
     this.active = false;
+    this.paused = false;
+    this.profile = profile==='opening' ? 'opening' : 'closing';
     this.ready = false;
     this.gl = null;
     this.frameId = null;
@@ -68,6 +70,7 @@ class SmokeSystem {
         precision highp float;
         varying vec2 v_uv;
         uniform float u_time;
+        uniform float u_opening;
         uniform vec2 u_imageScale;
         uniform sampler2D u_artwork;
 
@@ -122,12 +125,17 @@ class SmokeSystem {
 
           vec3 original = texture2D(u_artwork, scene).rgb;
           float luminance = dot(original, vec3(.2126, .7152, .0722));
-          float silhouettes = smoothstep(.045, .23, luminance);
+          float openingArea = 1. - smoothstep(.28, .47, abs(scene.x - .5));
+          float silhouettes = smoothstep(mix(.045, .015, u_opening),
+                                         mix(.23, .13, u_opening), luminance);
           float warmLights = 1. - smoothstep(.025, .16, original.r - original.b);
           float sceneMask = silhouettes * warmLights;
+          // The opening's empty, dark center needs mist even without bright scenery.
+          // Keep the cemetery's trees, gate and amber pumpkins untouched.
+          sceneMask = mix(sceneMask, max(silhouettes, openingArea * .75) * warmLights, u_opening);
           float density = valley * (.02 + wisps * .74)
                         + rising * smoothstep(.3, .67, distant) * .3
-                        + sky * smoothstep(.34, .7, distant) * .08;
+                        + sky * smoothstep(.34, .7, distant) * mix(.08, .22, u_opening);
           float alpha = (1. - exp(-density * 1.65)) * sceneMask;
 
           // Cold, translucent moonlight, not white smoke or an opaque grey veil.
@@ -136,9 +144,11 @@ class SmokeSystem {
 
           // Also advect the photograph's fine cloud detail, so the new mist feels part of it.
           vec2 displacement = vec2(distant - .5, near - .5) * vec2(.014, .011);
+          displacement *= mix(1., openingArea * 1.75, u_opening);
           vec3 shifted = texture2D(u_artwork, scene + displacement).rgb;
           float shiftedLight = dot(shifted, vec3(.2126, .7152, .0722));
-          float shiftedMask = smoothstep(.045, .23, shiftedLight)
+          float shiftedMask = smoothstep(mix(.045, .015, u_opening),
+                                         mix(.23, .13, u_opening), shiftedLight)
                             * (1. - smoothstep(.025, .16, shifted.r - shifted.b));
           float mistArea = clamp(sky * 1.4 + valley * .85 + rising, 0., 1.);
           // Keep the photographic advection above the skyline; castles must not ripple.
@@ -146,13 +156,17 @@ class SmokeSystem {
           float rightSkyline = .65 - .47 * smoothstep(.66, .93, scene.x);
           float skyline = min(leftSkyline, rightSkyline);
           float openSky = 1. - smoothstep(skyline - .04, skyline + .01, scene.y);
+          openSky = mix(openSky, openingArea, u_opening);
           float cloudAlpha = .62 * mistArea * openSky * min(sceneMask, shiftedMask);
 
           // Match .thanks-artwork's saturation/opacity and the existing dark vignette.
           vec3 graded = mix(vec3(.03137, .04314, .07059),
-                            mix(vec3(shiftedLight), shifted, .82), .6);
+                            mix(vec3(shiftedLight), shifted, .82), mix(.6, .9, u_opening));
           float veil = uv.y < .48 ? mix(.16, .08, uv.y / .48)
                                  : mix(.08, .2, (uv.y - .48) / .52);
+          float openingVeil = uv.y < .48 ? mix(.28, .08, uv.y / .48)
+                                        : mix(.08, .58, (uv.y - .48) / .52);
+          veil = mix(veil, openingVeil, u_opening);
           graded = mix(graded, vec3(.02353, .03137, .05098), veil);
           float combinedAlpha = alpha + cloudAlpha * (1. - alpha);
           vec3 color = (tint * alpha + graded * cloudAlpha * (1. - alpha))
@@ -185,6 +199,7 @@ class SmokeSystem {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.artwork);
       gl.uniform1i(gl.getUniformLocation(this.program, 'u_artwork'), 0);
+      gl.uniform1f(gl.getUniformLocation(this.program, 'u_opening'), this.profile==='opening' ? 1 : 0);
       this.timeUniform = gl.getUniformLocation(this.program, 'u_time');
       this.scaleUniform = gl.getUniformLocation(this.program, 'u_imageScale');
       this.ready = true;
@@ -234,6 +249,13 @@ class SmokeSystem {
     this.syncPlayback();
   }
 
+  setPaused(on) {
+    if(this.paused === on) return;
+    this.paused = on;
+    this.canvas.classList.toggle('is-paused', on);
+    this.syncPlayback();
+  }
+
   syncPlayback() {
     this.stop();
     const visible = this.active && !document.hidden;
@@ -243,7 +265,7 @@ class SmokeSystem {
     if(!this.gl) return;
     this.resize();
     this.draw();
-    if(!this.motionQuery.matches) this.frameId = requestAnimationFrame(this.tick);
+    if(!this.paused && !this.motionQuery.matches) this.frameId = requestAnimationFrame(this.tick);
   }
 
   stop() {
@@ -253,7 +275,7 @@ class SmokeSystem {
   }
 
   frame(t) {
-    if(!this.active || document.hidden || this.motionQuery.matches || !this.gl) {
+    if(!this.active || this.paused || document.hidden || this.motionQuery.matches || !this.gl) {
       this.stop();
       return;
     }
@@ -271,6 +293,6 @@ class SmokeSystem {
     this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
   }
 }
-SmokeSystem.assetVersion = '20261008-smoke-2';
+SmokeSystem.assetVersion = '20261012-smoke-1';
 window.SmokeSystem = SmokeSystem;
 })();

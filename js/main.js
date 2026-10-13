@@ -12,6 +12,9 @@ const audio = document.getElementById('theme-audio');
 const audioBtn = document.getElementById('audio-btn');
 const scissorOverlay = document.getElementById('scissor-overlay');
 const transitionArtwork = document.getElementById('transition-artwork');
+let openingSequence = null;
+const opening = document.getElementById('opening');
+let openingPending = Boolean(opening && window.OpeningSequence && (!location.hash || location.hash==='#hero'));
 const transitionCurtains = {
   top: scissorOverlay.querySelector('.scissor-half.top'),
   bottom: scissorOverlay.querySelector('.scissor-half.bottom'),
@@ -61,9 +64,34 @@ let transitionInProgress = false;
 const snowCanvas = document.getElementById('snow-canvas');
 const snow = new SnowSystem(snowCanvas);
 snow.setIntensity(30);
+const snowMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+const heroSnowDelay = new window.HeroSnowDelay(()=>{
+  snow.restartFromTop();
+  syncSnow();
+});
+function syncSnow(){
+  const isHero = document.body.classList.contains('hero-active');
+  const isOpening = openingPending || Boolean(openingSequence?.active);
+  heroSnowDelay.update({
+    active:isHero,
+    visible:!isOpening && !transitionInProgress && !document.hidden,
+  });
+  const waiting = isHero && !heroSnowDelay.ready;
+  document.body.classList.toggle('hero-snow-waiting', waiting);
+  snow.setActive(!isOpening && !waiting && !document.hidden && !snowMotionQuery.matches
+    && !document.body.classList.contains('thanks-active'));
+}
+document.addEventListener('visibilitychange', syncSnow);
+window.addEventListener('pagehide', ()=>{
+  heroSnowDelay.update({active:heroSnowDelay.active,visible:false});
+  snow.setActive(false);
+});
+window.addEventListener('pageshow', syncSnow);
+snowMotionQuery.addEventListener('change', syncSnow);
+syncSnow();
 
 // Mist belongs to the closing landscape, not the other slides.
-const smokeAssetVersion = '20261008-smoke-2';
+const smokeAssetVersion = '20261012-smoke-1';
 const thanksArtwork = document.querySelector('.thanks-artwork');
 let smokeCanvas = document.getElementById('smoke-canvas');
 let smoke = null;
@@ -71,7 +99,7 @@ let smoke = null;
 // An older cached HTML shell may be missing the canvas, stylesheet rules and smoke script.
 // Repair that shell without stopping navigation or leaving the snow visible on this slide.
 const stylesheet = document.querySelector('link[href*="css/style.css"]');
-const stylesheetAssetVersion = '20261012-style-1';
+const stylesheetAssetVersion = '20261012-credits-1';
 if(stylesheet && new URL(stylesheet.href).searchParams.get('v') !== stylesheetAssetVersion){
   stylesheet.href = 'css/style.css?v=' + stylesheetAssetVersion;
 }
@@ -156,11 +184,17 @@ function stopSynth(immediate=false){
   setTimeout(()=>isSynthPlaying=false,700);
 }
 let audioOn=false;
+let audioRequest=0;
+let awaitingThemeGesture=false;
+let heroThemeStarted=false;
+let themeDeepLinkPending=slides.some(slide=>slide.id!=='hero' && location.hash==='#'+slide.id);
 function updateAudioButton(on){
   audioBtn.classList.toggle('playing', on);
   audioBtn.setAttribute('aria-pressed', String(on));
 }
 function setAudio(on, immediate=false){
+  const request=++audioRequest;
+  awaitingThemeGesture=false;
   if(on && closingMemory?.active){
     closingMemory.setMuted(false);
     return;
@@ -170,7 +204,15 @@ function setAudio(on, immediate=false){
   updateAudioButton(on);
   if(on){
     if(audio.src && audio.src!==location.href){
-      audio.play().catch(()=>{ if(audioOn && !closingMemory?.active) playSynth(); });
+      audio.play().catch(error=>{
+        if(request!==audioRequest || !audioOn || closingMemory?.active || error.name==='AbortError') return;
+        if(error.name==='NotAllowedError'){
+          // A cold visit may still need a gesture; don't replace the song with a silent synth.
+          awaitingThemeGesture=true;
+          audioOn=false;
+          updateAudioButton(false);
+        } else playSynth();
+      });
     } else {
       if(audioCtx && audioCtx.state==='suspended') audioCtx.resume();
       playSynth();
@@ -184,7 +226,30 @@ audioBtn.addEventListener('click', ()=>{
   if(closingMemory?.active) closingMemory.setMuted(!thanksVideo.muted);
   else setAudio(!audioOn);
 });
-audio.volume = 0.18;
+audio.volume = .5;
+
+// Start with the uncovered hero, not with the prologue or the delayed snowfall.
+// Refreshes must not restart playback or undo the user's music toggle.
+function syncHeroTheme(){
+  const isHero=document.body.classList.contains('hero-active');
+  if(!isHero){
+    heroThemeStarted=false;
+    themeDeepLinkPending=false;
+    return;
+  }
+  if(themeDeepLinkPending || heroThemeStarted || openingPending || openingSequence?.active || transitionInProgress || document.hidden) return;
+  heroThemeStarted=true;
+  setAudio(true);
+}
+document.addEventListener('visibilitychange', syncHeroTheme);
+window.addEventListener('pageshow', syncHeroTheme);
+const unlockTheme = event=>{
+  if(!event.isTrusted || event.target?.closest?.('#audio-btn') || !awaitingThemeGesture
+    || document.hidden || openingPending || openingSequence?.active || transitionInProgress || closingMemory?.active) return;
+  setAudio(true);
+};
+document.addEventListener('pointerdown', unlockTheme, {passive:true});
+document.addEventListener('keydown', unlockTheme);
 
 // Progress + dots
 if(hasGSAP){
@@ -210,6 +275,7 @@ if(hasGSAP){
   slides.forEach(s=>dotObs.observe(s));
 }
 function activate(i){
+  if(openingSequence?.active && i!==0) return;
   dots.forEach(d=>d.classList.remove('active'));
   if(dots[i]) dots[i].classList.add('active');
   const id = slides[i]?.id;
@@ -219,7 +285,6 @@ function activate(i){
   if(!isThanks) updateAudioButton(audioOn);
   document.body.classList.toggle('thanks-active', isThanks);
   snowCanvas.style.visibility = isThanks ? 'hidden' : '';
-  snow.setActive?.(!isThanks);
   if(smoke) smoke.setActive(isThanks);
   else if(smokeCanvas) smokeCanvas.classList.toggle('is-active', isThanks);
   if(isThanks){
@@ -244,6 +309,8 @@ function activate(i){
     snow.setEmitting(false);
     snowCanvas.style.opacity='.52';
   }
+  syncSnow();
+  syncHeroTheme();
 }
 window.addEventListener('scroll', ()=>{
   const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -278,6 +345,7 @@ function scissorTransition(cb){
     return;
   }
   transitionInProgress = true;
+  syncSnow();
   transitionArtwork.src = transitionArtworks[transitionArtworkIndex];
   transitionArtworkIndex = (transitionArtworkIndex + 1) % transitionArtworks.length;
   const placement = transitionPlacements[transitionPlacementIndex];
@@ -298,12 +366,16 @@ function scissorTransition(cb){
   setTimeout(()=>{
     cb && cb();
     scissorOverlay.classList.remove('active');
-    setTimeout(()=>{ transitionInProgress = false; }, curtainMotionDuration);
+    setTimeout(()=>{
+      transitionInProgress = false;
+      syncSnow();
+      syncHeroTheme();
+    }, curtainMotionDuration);
   }, scissorTransitionDuration);
 }
 
 function go(i, {align='start'}={}){
-  if(transitionInProgress || i<0 || i>=slides.length || i===currentSlideIndex()) return false;
+  if(openingSequence?.active || transitionInProgress || i<0 || i>=slides.length || i===currentSlideIndex()) return false;
   scissorTransition(()=>{
     const rect = slides[i].getBoundingClientRect();
     const offset = align==='end' ? Math.max(0,rect.height-window.innerHeight) : 0;
@@ -319,7 +391,7 @@ function initSlideNavigation(){
     slides,
     getCurrentIndex:currentSlideIndex,
     navigate:go,
-    isTransitioning:()=>transitionInProgress,
+    isTransitioning:()=>transitionInProgress || Boolean(openingSequence?.active),
   });
 }
 if(window.SlideNavigation){
@@ -348,4 +420,19 @@ setTimeout(()=>{
 }, 1200);
 if(window.matchMedia('(prefers-reduced-motion: reduce)').matches && hasGSAP){
   gsap.globalTimeline.clear();
+}
+
+// Deep links remain direct; an ordinary visit starts with the film prologue.
+if(openingPending){
+  window.scrollTo({top:0,behavior:'instant'});
+  openingSequence = new window.OpeningSequence(opening, {
+    onStart:()=>setAudio(false, true),
+    onFinish:()=>{
+      window.scrollTo({top:0,behavior:'instant'});
+      activate(0);
+      if(hasGSAP) ScrollTrigger.refresh();
+    },
+  });
+  openingPending = false;
+  activate(0);
 }

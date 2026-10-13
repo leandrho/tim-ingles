@@ -51,6 +51,16 @@ class SnowSystem {
     this.particles = [];
     for(let i=0;i<this.baseCount;i++) this.particles.push(this.makeParticle(true));
   }
+  restartFromTop(){
+    // Stagger the flakes over an offscreen viewport, avoiding a dense band at the edge.
+    this.particles = Array.from({length:this.baseCount+this.extra}, ()=>{
+      const particle = this.makeParticle();
+      particle.y = -12 - Math.random()*this.h;
+      return particle;
+    });
+    this.emitterParticles = [];
+    this.ctx.clearRect(0,0,this.w,this.h);
+  }
   makeParticle(randomY=false){
     return {
       x: Math.random()*this.w,
@@ -197,3 +207,52 @@ class SnowSystem {
   }
 }
 window.SnowSystem = SnowSystem;
+
+// Count only time when the hero is uncovered; repeated activations do not restart it.
+class HeroSnowDelay {
+  constructor(onReady, delay=10000) {
+    this.onReady = onReady;
+    this.delay = delay;
+    this.active = false;
+    this.visible = false;
+    this.ready = false;
+    this.remaining = delay;
+    this.startedAt = null;
+    this.timer = null;
+    this.requestId = 0;
+  }
+  update({active, visible}) {
+    if(active!==this.active) {
+      this.pause();
+      this.active = active;
+      this.ready = false;
+      this.remaining = this.delay;
+    }
+    this.visible = active && visible;
+    if(!this.visible) {
+      this.pause();
+      return;
+    }
+    if(this.ready || this.timer!==null) return;
+    const request = ++this.requestId;
+    this.startedAt = performance.now();
+    this.timer = setTimeout(() => {
+      if(request!==this.requestId || !this.active || !this.visible) return;
+      this.timer = null;
+      this.startedAt = null;
+      this.remaining = 0;
+      this.ready = true;
+      this.onReady();
+    }, this.remaining);
+  }
+  pause() {
+    this.requestId++;
+    clearTimeout(this.timer);
+    if(this.startedAt!==null) {
+      this.remaining = Math.max(0, this.remaining - (performance.now() - this.startedAt));
+    }
+    this.startedAt = null;
+    this.timer = null;
+  }
+}
+window.HeroSnowDelay = HeroSnowDelay;

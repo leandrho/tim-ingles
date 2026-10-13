@@ -9,9 +9,37 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20261012-style-1" />
+  <link rel="stylesheet" href="css/style.css?v=20261012-credits-1" />
 </head>
 <body class="hero-active">
+  <!-- A one-minute prologue, separate from the nine presentation slides. -->
+  <section id="opening" class="opening" role="dialog" aria-modal="true" aria-labelledby="opening-label" aria-describedby="opening-description" hidden>
+    <h2 id="opening-label" class="sr-only">Opening film</h2>
+    <img class="opening-artwork" src="assets/images/halloween-intro-bg.webp" alt="" aria-hidden="true" decoding="async" width="1920" height="1080">
+    <div class="opening-vignette" aria-hidden="true"></div>
+    <div class="opening-film">
+      <div class="opening-film-surface">
+        <img class="opening-poster" src="assets/images/halloween-opening.webp" alt="" aria-hidden="true" decoding="async" fetchpriority="high" width="1280" height="720">
+        <video id="opening-video" class="opening-video" data-src="assets/video/this-is-halloween-opening.mp4" data-duration="60" poster="assets/images/halloween-opening.webp" preload="none" muted playsinline disablepictureinpicture disableremoteplayback width="1280" height="720" aria-label="This Is Halloween opening film" aria-describedby="opening-description">
+          <track kind="captions" src="assets/video/this-is-halloween-opening.vtt" srclang="en" label="English music captions">
+          Your browser does not support video playback.
+        </video>
+      </div>
+    </div>
+    <canvas id="opening-smoke" class="opening-smoke" aria-hidden="true"></canvas>
+    <p id="opening-description" class="sr-only">A one-minute musical opening from The Nightmare Before Christmas, with the title Tim Burton and the presenters' names. The presentation begins when the film ends. You can skip the opening at any time.</p>
+    <p class="opening-title" aria-hidden="true">TIM BURTON</p>
+    <div class="opening-gate">
+      <button id="opening-start" class="opening-start" type="button">START</button>
+      <p id="opening-status" class="sr-only" role="status"></p>
+    </div>
+    <p class="opening-credit opening-credit--agustina" aria-hidden="true">Agustina Miranda</p>
+    <p class="opening-credit opening-credit--leandro" aria-hidden="true">Leandro Ruiz</p>
+    <div class="opening-controls">
+      <button id="opening-skip" class="opening-control opening-skip" type="button">Skip intro</button>
+    </div>
+  </section>
+
   <!-- Progress bar -->
   <div id="progress"></div>
 
@@ -408,11 +436,12 @@
 
   <script src="vendor/gsap/gsap.min.js"></script>
   <script src="vendor/gsap/ScrollTrigger.min.js"></script>
-  <script src="js/snow.js?v=20261008-smoke-2"></script>
-  <script src="js/smoke.js?v=20261008-smoke-2"></script>
+  <script src="js/snow.js?v=20261012-top-snow-1"></script>
+  <script src="js/smoke.js?v=20261012-smoke-1"></script>
   <script src="js/closing-memory.js?v=20261010-memory-3"></script>
+  <script src="js/opening-sequence.js?v=20261012-credits-1"></script>
   <script src="js/slide-navigation.js?v=20261010-navigation-1"></script>
-  <script src="js/main.js?v=20261012-style-1"></script>
+  <script src="js/main.js?v=20261012-credits-1"></script>
   <script src="js/eyes.js?v=20261012-style-1"></script>
 </body>
 </html>
