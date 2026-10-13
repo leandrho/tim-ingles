@@ -22,8 +22,19 @@ test('presentation fits projector viewports and stays aligned after resizing', {
     if(!file.startsWith(root + path.sep)) { response.writeHead(403).end(); return; }
     fs.stat(file, (error,stat)=>{
       if(error || !stat.isFile()) { response.writeHead(404).end(); return; }
-      response.writeHead(200, {'Content-Type':types[path.extname(file)] || 'application/octet-stream'});
-      fs.createReadStream(file).pipe(response);
+      const range=request.headers.range?.match(/^bytes=(\d+)-(\d*)$/);
+      const start=range ? Number(range[1]) : 0;
+      const end=range?.[2] ? Math.min(Number(range[2]),stat.size-1) : stat.size-1;
+      if(start>end) { response.writeHead(416, {'Content-Range':`bytes */${stat.size}`}).end(); return; }
+      response.writeHead(range ? 206 : 200, {
+        'Content-Type':types[path.extname(file)] || 'application/octet-stream',
+        'Content-Length':end-start+1,
+        'Accept-Ranges':'bytes',
+        ...(range ? {'Content-Range':`bytes ${start}-${end}/${stat.size}`} : {}),
+      });
+      const stream=fs.createReadStream(file,{start,end});
+      response.on('close',()=>stream.destroy());
+      stream.pipe(response);
     });
   });
   await new Promise(resolve=>server.listen(0, '127.0.0.1', resolve));
@@ -97,4 +108,35 @@ test('presentation fits projector viewports and stays aligned after resizing', {
     }).map(element=>element.className));
     assert.deepEqual(spills, [], `${width}×${height} opening: unsafe content`);
   }
+
+  // Verify the actual trimmed media reaches the permanent ending, without a loop.
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto(`http://127.0.0.1:${server.address().port}/?closing-check=1#thanks`);
+  await page.waitForFunction(()=>{
+    const video=document.getElementById('thanks-video');
+    return Number.isFinite(video.duration) && video.readyState>=2 && !video.paused;
+  });
+  const duration=await page.locator('#thanks-video').evaluate(video=>{
+    video.currentTime=video.duration-.2;
+    return video.duration;
+  });
+  assert.ok(Math.abs(duration-66.04)<.04, `Unexpected trimmed duration: ${duration}`);
+  await page.waitForFunction(()=>{
+    const title=document.querySelector('.thanks-title');
+    const memory=document.querySelector('.thanks-memory');
+    return document.getElementById('thanks-video').paused
+      && memory.classList.contains('is-finished') && getComputedStyle(memory).opacity==='0'
+      && title.classList.contains('is-visible') && getComputedStyle(title).opacity==='1';
+  }, null, {timeout:10000}).catch(async error=>{
+    const state=await page.evaluate(()=>{
+      const video=document.getElementById('thanks-video');
+      const title=document.querySelector('.thanks-title');
+      const memory=document.querySelector('.thanks-memory');
+      return {currentTime:video.currentTime,duration:video.duration,paused:video.paused,ended:video.ended,body:document.body.className,title:title.className,titleOpacity:getComputedStyle(title).opacity,memory:memory.className,memoryOpacity:getComputedStyle(memory).opacity};
+    });
+    assert.fail(`Closing did not settle: ${JSON.stringify(state)} (${error.message})`);
+  });
+  await page.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
+  assert.equal(await page.locator('#thanks-video').evaluate(video=>video.loop),false);
+  assert.equal(await page.locator('.thanks-title').getAttribute('aria-hidden'),null);
 });

@@ -1,4 +1,4 @@
-// A control-free film memory. Its loop always begins at the original 1:01.
+// A control-free film memory, played once before the permanent thank-you.
 (() => {
 class ClosingMemory {
   constructor(video, {onEnter, onSoundChange} = {}) {
@@ -19,13 +19,15 @@ class ClosingMemory {
     this.requestId = 0;
     this.metadataPromise = null;
     this.awaitingSound = false;
+    this.completed = false;
 
     video.controls = false;
+    video.loop = false;
     video.disablePictureInPicture = true;
     video.muted = true;
     video.volume = .65;
     video.addEventListener('volumechange', () => {
-      if(this.active) this.onSoundChange?.(!video.muted);
+      if(this.active && !this.completed) this.onSoundChange?.(!video.muted);
     });
     for(const event of ['playing', 'loadeddata', 'seeked']) {
       video.addEventListener(event, () => {
@@ -42,11 +44,11 @@ class ClosingMemory {
       video.pause();
       this.memory.classList.remove('is-ready');
     });
-    video.addEventListener('ended', () => {
-      this.needsRestart = true;
-      this.syncPlayback();
+    video.addEventListener('ended', () => this.finish());
+    this.motionQuery.addEventListener('change', () => {
+      if(this.active && this.motionQuery.matches) this.finish();
+      else this.syncPlayback();
     });
-    this.motionQuery.addEventListener('change', () => this.syncPlayback());
     const unlockSound = event => {
       if(!event.isTrusted || event.target?.closest?.('#audio-btn')) return;
       if(this.active && this.awaitingSound && !document.hidden && !this.motionQuery.matches) {
@@ -66,7 +68,7 @@ class ClosingMemory {
       this.titleTimer = null;
     });
     window.addEventListener('pageshow', () => {
-      if(this.active && this.titleTimer === null && !this.title?.classList.contains('is-dismissed')) {
+      if(this.active && !this.completed && this.titleTimer === null && !this.title?.classList.contains('is-dismissed')) {
         this.startTitleTimer();
       }
       this.syncPlayback();
@@ -79,6 +81,8 @@ class ClosingMemory {
     this.active = on;
     if(on) {
       this.onEnter?.();
+      this.completed = false;
+      this.memory.classList.remove('is-finished');
       this.needsRestart = true;
       this.failed = false;
       this.awaitingSound = false;
@@ -87,6 +91,7 @@ class ClosingMemory {
       this.startTitleTimer();
       // Never reveal the final frame from the previous visit while seeking.
       this.memory.classList.remove('is-ready');
+      if(this.motionQuery.matches) this.finish();
     } else {
       this.resetTitle();
     }
@@ -94,6 +99,10 @@ class ClosingMemory {
   }
 
   setMuted(muted) {
+    if(this.completed) {
+      if(this.active) this.onSoundChange?.(false);
+      return;
+    }
     this.awaitingSound = false;
     this.video.muted = muted;
     if(this.active) this.onSoundChange?.(!muted);
@@ -110,17 +119,31 @@ class ClosingMemory {
     this.title?.setAttribute('aria-hidden', 'true');
   }
 
+  finish() {
+    if(!this.active || this.completed) return;
+    this.completed = true;
+    this.requestId++;
+    this.busy = false;
+    this.awaitingSound = false;
+    this.video.pause();
+    this.resetTitle();
+    this.memory.classList.add('is-finished');
+    this.title?.classList.add('is-visible');
+    this.title?.removeAttribute('aria-hidden');
+    this.onSoundChange?.(false);
+  }
+
   startTitleTimer() {
     if(!this.title) return;
     this.resetTitle();
     this.titleTimer = setTimeout(() => {
       this.titleTimer = null;
-      if(!this.active) return;
+      if(!this.active || this.completed) return;
       this.title.classList.add('is-visible');
       this.title.removeAttribute('aria-hidden');
       this.titleTimer = setTimeout(() => {
         this.titleTimer = null;
-        if(!this.active) return;
+        if(!this.active || this.completed) return;
         this.title.classList.remove('is-visible');
         this.title.classList.add('is-dismissed');
         this.title.setAttribute('aria-hidden', 'true');
@@ -129,7 +152,7 @@ class ClosingMemory {
   }
 
   shouldPlay() {
-    return this.active && !document.hidden && !this.failed && !this.motionQuery.matches;
+    return this.active && !this.completed && !document.hidden && !this.failed && !this.motionQuery.matches;
   }
 
   waitForMedia(event, isReady, action) {
